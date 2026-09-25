@@ -1,2347 +1,994 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>AssetGuard Pro | Payments</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
-<style>
-:root{
-    --bg:#f1f5f9;
-    --card:#fff;
-    --line:#e2e8f0;
-    --blue:#0284c7;
-    --blue2:#0369a1;
-    --blue-dark:#001A35;
-    --green:#16a34a;
-    --red:#dc2626;
-    --orange:#d97706;
-    --purple:#7c3aed;
-    --text:#0f172a;
-    --muted:#64748b;
-    --soft:#f8fafc;
-    --shadow:0 2px 10px rgba(15,23,42,.05);
-    --sidebar:220px;
-}
-
-*{
-    box-sizing:border-box;
-    -webkit-tap-highlight-color:transparent;
-    margin:0;
-    padding:0;
-}
-
-html,body{
-    width:100%;
-    min-height:100%;
-    font-family:Inter,"Segoe UI",system-ui,sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    overflow-x:hidden;
-}
-
-button,
-input,
-select{
-    font-family:inherit;
-}
-
-button{
-    cursor:pointer;
-}
-
-/* =========================================================
-   SIDEBAR & FLOATING MENU BUTTON (DRAWER MODE)
-========================================================= */
-
-.sidebar{
-    position:fixed;
-    top:0;
-    left:0;
-    bottom:0;
-    width:var(--sidebar);
-    background:var(--blue-dark);
-    color:#fff;
-    z-index:1000;
-    display:flex;
-    flex-direction:column;
-    padding:14px 10px;
-    transform:translateX(-100%);
-    transition:transform .25s ease;
-    box-shadow:8px 0 25px rgba(0,0,0,.2);
-}
-
-.sidebar.open{
-    transform:translateX(0);
-}
-
-.brand{
-    display:flex;
-    align-items:center;
-    gap:9px;
-    padding:3px 7px 16px;
-}
-
-.brand-logo{
-    width:31px;
-    height:31px;
-    border-radius:9px;
-    background:var(--blue);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:16px;
-    font-weight:800;
-    flex:none;
-    color:#fff;
-}
-
-.brand-text{
-    line-height:1.05;
-}
-
-.brand-text strong{
-    display:block;
-    font-size:14px;
-    font-weight:800;
-}
-
-.brand-text span{
-    display:block;
-    margin-top:3px;
-    color:#8fa5bc;
-    font-size:8px;
-    letter-spacing:.7px;
-    text-transform:uppercase;
-}
-
-.nav{
-    display:flex;
-    flex-direction:column;
-    gap:3px;
-}
-
-.nav a{
-    display:flex;
-    align-items:center;
-    gap:9px;
-    min-height:35px;
-    padding:7px 9px;
-    color:#b9c7d6;
-    text-decoration:none;
-    border-radius:8px;
-    font-size:11px;
-    font-weight:600;
-    transition:.15s ease;
-}
-
-.nav a:hover{
-    background:rgba(255,255,255,.07);
-    color:#fff;
-}
-
-.nav a.active{
-    background:var(--blue);
-    color:#fff;
-}
-
-.nav-icon{
-    width:18px;
-    text-align:center;
-    font-size:14px;
-    flex:none;
-}
-
-.sidebar-bottom{
-    margin-top:auto;
-    border-top:1px solid rgba(255,255,255,.08);
-    padding-top:10px;
-}
-
-.sidebar-bottom a{
-    display:flex;
-    align-items:center;
-    gap:9px;
-    padding:8px 9px;
-    border-radius:8px;
-    color:#9fb1c4;
-    text-decoration:none;
-    font-size:11px;
-    font-weight:600;
-}
-
-.sidebar-bottom a:hover{
-    color:#fff;
-    background:rgba(255,255,255,.06);
-}
-
-.menu-btn{
-    display:flex !important;
-    align-items:center;
-    justify-content:center;
-    position:fixed;
-    top:14px;
-    left:16px;
-    width:38px;
-    height:38px;
-    background:var(--blue-dark);
-    color:#ffffff;
-    border:1px solid rgba(255,255,255,0.15);
-    border-radius:8px;
-    cursor:pointer;
-    font-size:18px;
-    z-index:1100;
-    box-shadow:0 2px 8px rgba(0,0,0,0.15);
-    transition:background .2s ease, transform .15s ease;
-}
-
-.menu-btn:hover{
-    background:var(--blue);
-    transform:scale(1.05);
-}
-
-.overlay{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.35);
-    z-index:900;
-}
-
-.overlay.show{
-    display:block;
-}
-
-/* =========================================================
-   MAIN LAYOUT (INDEPENDENT / FULL WIDTH)
-========================================================= */
-
-.main{
-    margin-left:0;
-    min-height:100vh;
-}
-
-.app{
-    width:100%;
-    max-width:1350px;
-    margin:auto;
-    padding:16px 22px 30px;
-}
-
-/* =========================================================
-   PAGE HEADER
-========================================================= */
-
-.page-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:12px;
-    margin-bottom:12px;
-    padding-left:48px; /* Offset for floating menu button */
-}
-
-.page-heading h1{
-    margin:0;
-    font-size:24px;
-    font-weight:950;
-    letter-spacing:-.4px;
-}
-
-.page-heading p{
-    margin:4px 0 0;
-    color:var(--muted);
-    font-size:12px;
-}
-
-.header-actions{
-    display:flex;
-    gap:7px;
-}
-
-.btn{
-    min-height:36px;
-    border:1px solid var(--line);
-    border-radius:7px;
-    padding:8px 12px;
-    background:#fff;
-    color:var(--text);
-    font-size:10px;
-    font-weight:950;
-    text-transform:uppercase;
-}
-
-.btn.primary{
-    background:var(--blue);
-    color:#fff;
-    border-color:var(--blue);
-}
-
-.btn.primary:hover{
-    background:var(--blue2);
-}
-
-/* =========================================================
-   KPI STRIP
-========================================================= */
-
-.kpis{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:8px;
-    margin-bottom:12px;
-}
-
-.kpi{
-    background:#fff;
-    border:1px solid var(--line);
-    border-radius:10px;
-    padding:11px;
-    box-shadow:var(--shadow);
-    min-width:0;
-}
-
-.kpi-label{
-    color:var(--muted);
-    font-size:9px;
-    font-weight:950;
-    text-transform:uppercase;
-}
-
-.kpi-value{
-    margin-top:4px;
-    font-size:21px;
-    font-weight:950;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-
-.kpi-sub{
-    margin-top:3px;
-    color:var(--muted);
-    font-size:9px;
-}
-
-/* =========================================================
-   WORKSPACE
-========================================================= */
-
-.workspace{
-    display:grid;
-    grid-template-columns:350px minmax(0,1fr);
-    gap:12px;
-    align-items:start;
-}
-
-/* =========================================================
-   CARD
-========================================================= */
-
-.card{
-    background:#fff;
-    border:1px solid var(--line);
-    border-radius:10px;
-    box-shadow:var(--shadow);
-    min-width:0;
-}
-
-.card-header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:8px;
-    padding:11px 12px;
-    border-bottom:1px solid var(--line);
-}
-
-.card-title{
-    color:var(--blue);
-    font-size:12px;
-    font-weight:950;
-    text-transform:uppercase;
-    letter-spacing:.35px;
-}
-
-.card-note{
-    color:var(--muted);
-    font-size:9px;
-    font-weight:800;
-}
-
-.card-body{
-    padding:12px;
-}
-
-/* =========================================================
-   PAYMENT FORM
-========================================================= */
-
-.form-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-}
-
-.field{
-    min-width:0;
-}
-
-.field.full{
-    grid-column:1/-1;
-}
-
-.field label{
-    display:block;
-    margin-bottom:4px;
-    color:var(--muted);
-    font-size:8px;
-    font-weight:950;
-    text-transform:uppercase;
-}
-
-.field input,
-.field select{
-    width:100%;
-    height:37px;
-    border:1px solid var(--line);
-    border-radius:6px;
-    background:var(--soft);
-    padding:7px 9px;
-    color:var(--text);
-    outline:none;
-    font-size:11px;
-    font-weight:700;
-}
-
-.field input:focus,
-.field select:focus{
-    border-color:var(--blue);
-    background:#fff;
-    box-shadow:0 0 0 2px rgba(2,132,199,.08);
-}
-
-/* =========================================================
-   TENANT LOOKUP
-========================================================= */
-
-.lookup{
-    position:relative;
-}
-
-.lookup input{
-    padding-right:32px;
-}
-
-.lookup-icon{
-    position:absolute;
-    right:9px;
-    top:50%;
-    transform:translateY(-50%);
-    color:var(--blue);
-    font-size:13px;
-}
-
-/* =========================================================
-   PAYMENT METHODS
-========================================================= */
-
-.methods{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:5px;
-}
-
-.method{
-    position:relative;
-}
-
-.method input{
-    position:absolute;
-    opacity:0;
-}
-
-.method label{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    min-height:36px;
-    border:1px solid var(--line);
-    border-radius:6px;
-    background:var(--soft);
-    color:var(--muted);
-    font-size:8px;
-    font-weight:950;
-    text-transform:uppercase;
-    cursor:pointer;
-    text-align:center;
-}
-
-.method input:checked + label{
-    border-color:var(--blue);
-    background:#eff6ff;
-    color:var(--blue);
-}
-
-/* =========================================================
-   FORM ACTIONS
-========================================================= */
-
-.form-actions{
-    display:flex;
-    gap:7px;
-    margin-top:10px;
-}
-
-.form-actions .btn{
-    flex:1;
-}
-
-/* =========================================================
-   COLLECTION PROGRESS
-========================================================= */
-
-.collection{
-    margin-top:12px;
-    border:1px solid var(--line);
-    border-radius:8px;
-    background:var(--soft);
-    padding:10px;
-}
-
-.collection-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    font-size:9px;
-    font-weight:900;
-}
-
-.progress{
-    height:7px;
-    background:#e2e8f0;
-    border-radius:10px;
-    overflow:hidden;
-    margin-top:7px;
-}
-
-.progress-bar{
-    height:100%;
-    width:94.3%;
-    background:var(--green);
-    border-radius:10px;
-}
-
-/* =========================================================
-   SEARCH / FILTER
-========================================================= */
-
-.filters{
-    display:grid;
-    grid-template-columns:minmax(180px,1fr) 130px 130px;
-    gap:6px;
-    padding:10px 12px;
-    border-bottom:1px solid var(--line);
-}
-
-.search{
-    position:relative;
-}
-
-.search input,
-.filters select{
-    width:100%;
-    height:34px;
-    border:1px solid var(--line);
-    background:var(--soft);
-    border-radius:6px;
-    padding:7px 9px;
-    outline:none;
-    font-size:10px;
-    font-weight:700;
-}
-
-.search input{
-    padding-left:28px;
-}
-
-.search span{
-    position:absolute;
-    left:9px;
-    top:50%;
-    transform:translateY(-50%);
-    font-size:12px;
-    color:var(--muted);
-}
-
-/* =========================================================
-   PAYMENT LIST
-========================================================= */
-
-.payment-list{
-    padding:10px 12px 12px;
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-    max-height:590px;
-    overflow-y:auto;
-}
-
-.payment{
-    display:grid;
-    grid-template-columns:minmax(0,1fr) auto;
-    gap:8px;
-    border:1px solid var(--line);
-    border-radius:7px;
-    padding:9px;
-    background:#fff;
-}
-
-.payment:hover{
-    border-color:#bfdbfe;
-}
-
-.payment-name{
-    font-size:12px;
-    font-weight:950;
-}
-
-.payment-sub{
-    margin-top:2px;
-    color:var(--muted);
-    font-size:8px;
-}
-
-.payment-ref{
-    margin-top:5px;
-    color:var(--muted);
-    font-size:8px;
-}
-
-.payment-right{
-    text-align:right;
-}
-
-.payment-amount{
-    font-size:13px;
-    font-weight:950;
-    white-space:nowrap;
-}
-
-.payment-date{
-    margin-top:3px;
-    color:var(--muted);
-    font-size:8px;
-}
-
-.payment-bottom{
-    grid-column:1/-1;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:6px;
-    padding-top:6px;
-    border-top:1px solid #f1f5f9;
-}
-
-.tags{
-    display:flex;
-    flex-wrap:wrap;
-    gap:4px;
-}
-
-.tag{
-    display:inline-flex;
-    padding:3px 6px;
-    border-radius:4px;
-    background:#f1f5f9;
-    color:var(--muted);
-    font-size:7px;
-    font-weight:950;
-    text-transform:uppercase;
-}
-
-.tag.green{
-    background:#f0fdf4;
-    color:var(--green);
-}
-
-.tag.blue{
-    background:#eff6ff;
-    color:var(--blue);
-}
-
-.tag.orange{
-    background:#fffbeb;
-    color:var(--orange);
-}
-
-.tag.red{
-    background:#fef2f2;
-    color:var(--red);
-}
-
-.payment-buttons{
-    display:flex;
-    gap:4px;
-}
-
-.mini-btn{
-    border:1px solid var(--line);
-    background:var(--soft);
-    color:var(--blue);
-    border-radius:4px;
-    padding:4px 6px;
-    font-size:7px;
-    font-weight:950;
-}
-
-/* =========================================================
-   BREAKDOWN
-========================================================= */
-
-.breakdown{
-    margin-top:12px;
-}
-
-.breakdown-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:7px;
-    padding:10px 12px 12px;
-}
-
-.breakdown-item{
-    border:1px solid var(--line);
-    border-radius:7px;
-    padding:9px;
-    background:var(--soft);
-}
-
-.breakdown-name{
-    font-size:9px;
-    font-weight:950;
-}
-
-.breakdown-value{
-    margin-top:4px;
-    font-size:13px;
-    font-weight:950;
-}
-
-.breakdown-count{
-    margin-top:2px;
-    color:var(--muted);
-    font-size:8px;
-}
-
-/* =========================================================
-   RECEIPT MODAL
-========================================================= */
-
-.modal{
-    position:fixed;
-    inset:0;
-    background:rgba(15,23,42,.45);
-    z-index:2000;
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:15px;
-}
-
-.modal.show{
-    display:flex;
-}
-
-.modal-box{
-    width:100%;
-    max-width:420px;
-    max-height:90vh;
-    overflow-y:auto;
-    background:#fff;
-    border-radius:10px;
-    box-shadow:0 20px 50px rgba(0,0,0,.2);
-}
-
-.modal-header{
-    padding:12px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    border-bottom:1px solid var(--line);
-}
-
-.modal-title{
-    font-size:13px;
-    font-weight:950;
-}
-
-.modal-close{
-    width:28px;
-    height:28px;
-    border:0;
-    border-radius:5px;
-    background:var(--soft);
-    font-size:18px;
-    color:var(--muted);
-}
-
-.receipt{
-    padding:18px;
-}
-
-.receipt-brand{
-    text-align:center;
-    color:var(--blue);
-    font-size:18px;
-    font-weight:950;
-}
-
-.receipt-sub{
-    text-align:center;
-    color:var(--muted);
-    font-size:8px;
-    margin-top:3px;
-}
-
-.receipt-title{
-    text-align:center;
-    font-size:11px;
-    font-weight:950;
-    margin:15px 0 10px;
-}
-
-.receipt-row{
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-    padding:7px 0;
-    border-bottom:1px solid var(--line);
-    font-size:9px;
-}
-
-.receipt-total{
-    display:flex;
-    justify-content:space-between;
-    padding-top:12px;
-    font-size:14px;
-    font-weight:950;
-}
-
-.modal-actions{
-    padding:0 12px 12px;
-    display:flex;
-    gap:7px;
-}
-
-.modal-actions .btn{
-    flex:1;
-}
-
-/* =========================================================
-   RESPONSIVENESS
-========================================================= */
-
-@media(max-width:700px){
-    .app{
-        padding:8px;
-        padding-bottom:20px;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AssetGuard Pro | Payments & Ledger</title>
+  <style>
+    *{ box-sizing:border-box; margin:0; padding:0; } 
+    :root{ 
+      --primary:#0284c7; 
+      --primary-dark:#075985; 
+      --primary-light:#e0f2fe; 
+      --success:#16a34a; 
+      --success-light:#dcfce7; 
+      --danger:#dc2626; 
+      --danger-light:#fee2e2; 
+      --warning:#d97706; 
+      --warning-light:#fef3c7; 
+      --dark:#0f172a; 
+      --muted:#64748b; 
+      --border:#e2e8f0; 
+      --bg:#f5f7fa; 
+      --white:#fff; 
+    } 
+    html, body{ width:100%; min-height:100%; overflow-x:hidden; } 
+    body{ 
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; 
+      background:var(--bg); 
+      color:var(--dark); 
+      font-size:13px; 
+    } 
+    button, input, select, textarea{ font:inherit; } 
+    button{ cursor:pointer; } 
+    .app{ width:100%; max-width:1450px; margin:auto; padding:8px; overflow-x:hidden; } 
+
+    /* ========================================================= TOP NAVIGATION BAR ========================================================= */ 
+    .navbar {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 16px 12px 55px; 
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+      box-shadow: 0 3px 12px rgba(15,23,42,.03);
+      width: 100%;
+      min-height: 52px;
     }
-    .page-header{
-        align-items:flex-start;
-        padding-left:44px;
+    .nav-brand {
+      font-size: 14px;
+      font-weight: 850;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
     }
-    .page-heading h1{
-        font-size:21px;
-    }
-    .page-heading p{
-        font-size:10px;
-    }
-    .header-actions .btn{
-        padding:8px 9px;
-    }
-    .kpis{
-        grid-template-columns:repeat(2,1fr);
-    }
-    .workspace{
-        grid-template-columns:1fr;
-    }
-    .filters{
-        grid-template-columns:1fr 1fr;
-    }
-    .filters .search{
-        grid-column:1/-1;
-    }
-    .breakdown-grid{
-        grid-template-columns:repeat(2,1fr);
-    }
-}
 
-@media(max-width:390px){
-    .page-header{
-        display:block;
-        padding-left:44px;
+    /* ========================================================= FLOATING MENU BUTTON (TOP-LEFT) ========================================================= */
+    .floating-home-btn {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      width: 38px;
+      height: 38px;
+      background: var(--dark);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.3);
+      z-index: 4000;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: transform 0.2s ease, background 0.2s ease;
     }
-    .header-actions{
-        margin-top:8px;
+    .floating-home-btn:hover {
+      transform: scale(1.06);
+      background: var(--primary-dark);
     }
-    .header-actions .btn{
-        width:100%;
+    .floating-home-btn span {
+      display: block;
+      width: 16px;
+      height: 2px;
+      background: white;
+      border-radius: 1px;
     }
-    .form-grid{
-        grid-template-columns:1fr;
+
+    /* ========================================================= HEADER ========================================================= */ 
+    .page-header{ 
+      background:var(--white); 
+      border:1px solid var(--border); 
+      border-radius:12px; 
+      padding:10px; 
+      display:flex; 
+      align-items:center; 
+      justify-content:space-between; 
+      gap:8px; 
+      margin-bottom:8px; 
+      width: 100%;
+    } 
+    .page-title{ display:flex; align-items:center; gap:8px; min-width:0; flex:1; } 
+    .page-title h1{ font-size:14px; line-height:1.2; font-weight:800; } 
+    .page-title p{ color:var(--muted); font-size:9px; margin-top:2px; } 
+    .header-actions{ display:flex; align-items:center; justify-content:flex-end; gap:6px; } 
+
+    .btn{ 
+      border:0; border-radius:8px; min-height:32px; padding:5px 10px; display:inline-flex; 
+      align-items:center; justify-content:center; gap:4px; font-size:10px; font-weight:750; transition:.18s ease; white-space:nowrap; 
+    } 
+    .btn:hover{ transform:translateY(-1px); } 
+    .btn-primary{ background:var(--primary); color:white; } 
+    .btn-primary:hover{ background:var(--primary-dark); } 
+    .btn-secondary{ background:#f1f5f9; color:#334155; border:1px solid var(--border); } 
+
+    /* ========================================================= STATS ========================================================= */ 
+    .stats{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-bottom:8px; width:100%; } 
+    @media(max-width:640px){ .stats{ grid-template-columns:1fr; } } 
+    .stat{ background:var(--white); border:1px solid var(--border); border-radius:11px; padding:10px; width:100%; } 
+    .stat-top{ display:flex; align-items:center; justify-content:space-between; gap:5px; } 
+    .stat-label{ color:var(--muted); font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.3px; } 
+    .stat-icon{ width:26px; height:26px; border-radius:8px; display:grid; place-items:center; font-size:12px; } 
+    .stat-value{ margin-top:5px; font-size:16px; line-height:1; font-weight:850; } 
+    .stat-note{ margin-top:4px; color:var(--muted); font-size:8px; } 
+
+    /* ========================================================= LAYOUT GRID ========================================================= */ 
+    .main-grid{ display:grid; grid-template-columns:360px minmax(0,1fr); gap:8px; width:100%; } 
+    @media(max-width:950px){ .main-grid{ grid-template-columns:1fr; } } 
+
+    .card{ 
+      background:var(--white); border:1px solid var(--border); border-radius:12px; overflow:hidden; 
+      box-shadow:0 3px 15px rgba(15,23,42,.035); margin-bottom:8px; width:100%; max-width:100%; 
+    } 
+    .card-header{ padding:10px 12px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; width:100%; } 
+    .card-title{ font-size:12px; font-weight:800; } 
+    .card-subtitle{ color:var(--muted); font-size:9px; margin-top:2px; } 
+    .card-body{ padding:10px; width:100%; max-width:100%; } 
+
+    /* ========================================================= FORMS ========================================================= */ 
+    .form-grid{ display:grid; gap:8px; width:100%; } 
+    .form-group{ min-width:0; width:100%; } 
+    .form-label{ display:block; font-size:9px; font-weight:800; color:#334155; margin-bottom:3px; } 
+    .required{ color:var(--danger); } 
+    .form-control{ 
+      width:100%; max-width:100%; height:36px; border:1px solid var(--border); border-radius:8px; outline:none; 
+      padding:0 9px; background:#f8fafc; color:var(--dark); font-size:11px; 
+    } 
+    textarea.form-control{ height:50px; resize:vertical; padding-top:6px; } 
+    select.form-control{ cursor:pointer; } 
+    .form-control:focus{ border-color:var(--primary); box-shadow:0 0 0 3px rgba(2,132,199,.1); background:white; } 
+    .help{ color:var(--muted); font-size:8px; margin-top:2px; } 
+
+    .info-preview{ background:#f0f9ff; border:1px solid #bae6fd; border-radius:8px; padding:9px; font-size:10px; line-height:1.4; color:#0369a1; width:100%; } 
+
+    /* ========================================================= TOOLBAR & LEDGER VIEWS ========================================================= */ 
+    .toolbar{ display:flex; gap:6px; align-items:center; width:100%; flex-wrap:wrap; } 
+    .search{ flex:1; min-width:160px; position:relative; } 
+    .search input{ width:100%; height:34px; border:1px solid var(--border); border-radius:8px; padding:0 10px 0 28px; outline:none; background:#f8fafc; font-size:10px; } 
+    .search-icon{ position:absolute; left:8px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:10px; } 
+    .filter{ height:34px; border:1px solid var(--border); border-radius:8px; background:#f8fafc; padding:0 6px; outline:none; color:#334155; font-size:10px; } 
+
+    .desktop-table-view { display: block; width: 100%; overflow-x: auto; }
+    .mobile-card-view { display: none; width: 100%; }
+
+    @media(max-width: 768px) {
+      .desktop-table-view { display: none !important; }
+      .mobile-card-view { display: block !important; }
     }
-    .field.full{
-        grid-column:auto;
+
+    table{ width:100%; min-width:680px; border-collapse:collapse; } 
+    thead th{ 
+      background:#f8fafc; color:#475569; font-size:9px; text-transform:uppercase; letter-spacing:.35px; 
+      font-weight:800; padding:8px; border-bottom:1px solid var(--border); text-align:left; white-space:nowrap; 
+    } 
+    tbody td{ padding:8px; border-bottom:1px solid #edf2f7; font-size:10px; vertical-align:middle; white-space:nowrap; } 
+    tbody tr:last-child td{ border-bottom:0; } 
+    tbody tr:hover{ background:#f8fbff; } 
+    .money{ font-weight:750; } 
+
+    .m-card {
+      background: #fafafa;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 10px;
+      margin-bottom: 8px;
     }
-    .methods{
-        grid-template-columns:repeat(2,1fr);
+    .m-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
     }
-    .payment{
-        grid-template-columns:1fr;
+    .m-card-house { font-size: 11px; font-weight: 850; color: var(--dark); }
+    .m-card-amount { font-size: 12px; font-weight: 850; color: var(--success); }
+    .m-card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 10px; color: #334155; margin-bottom: 8px; }
+    .m-card-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 6px; border-top: 1px dashed var(--border); font-size: 9px; color: var(--muted); }
+
+    .badge{ display:inline-flex; align-items:center; gap:3px; padding:3px 6px; border-radius:999px; font-size:8px; font-weight:800; } 
+    .badge-mpesa{ background:var(--success-light); color:#166534; } 
+    .badge-bank{ background:var(--primary-light); color:#075985; } 
+    .badge-cash{ background:var(--warning-light); color:#92400e; } 
+    .badge-cheque{ background:#f1f5f9; color:#475569; } 
+
+    .empty{ padding:25px 15px; text-align:center; } 
+    .empty-icon{ width:38px; height:38px; border-radius:10px; background:#f1f5f9; display:grid; place-items:center; margin:0 auto 6px; font-size:15px; } 
+
+    /* ========================================================= SECURITY MODAL ========================================================= */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(2px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
     }
-    .payment-right{
-        text-align:left;
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
     }
-    .payment-bottom{
-        display:block;
+    .security-modal {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 20px;
+      width: 100%;
+      max-width: 340px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      border: 1px solid var(--border);
+      transform: translateY(10px);
+      transition: transform 0.2s ease;
     }
-    .payment-buttons{
-        margin-top:6px;
+    .modal-overlay.active .security-modal {
+      transform: translateY(0);
     }
-}
-</style>
+    .security-modal h3 {
+      font-size: 13px;
+      font-weight: 850;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .security-modal p {
+      font-size: 10px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .security-error {
+      color: var(--danger);
+      font-size: 9px;
+      margin-top: 4px;
+      display: none;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 12px;
+    }
+    .settings-link {
+      display: block;
+      text-align: center;
+      margin-top: 10px;
+      font-size: 9px;
+      color: var(--primary);
+      text-decoration: underline;
+      font-weight: 700;
+    }
+    .settings-link:hover {
+      color: var(--primary-dark);
+    }
+
+    /* Toast */ 
+    .toast{ 
+      position:fixed; right:10px; bottom:10px; z-index:3000; background:#0f172a; color:white; 
+      padding:9px 11px; border-radius:8px; box-shadow:0 10px 25px rgba(0,0,0,.2); font-size:10px; font-weight:700; 
+      opacity:0; transform:translateY(10px); pointer-events:none; transition:.2s; max-width:280px; 
+    } 
+    .toast.show{ opacity:1; transform:none; } 
+  </style>
 </head>
-
 <body>
+  <div class="app">
+    <!-- ===================================================== FLOATING MENU BUTTON (TOP-LEFT) ====================================================== -->
+    <a href="index.html" class="floating-home-btn" title="Back to Dashboard">
+      <span></span>
+      <span></span>
+      <span></span>
+    </a>
 
-<!-- FLOATING MENU BUTTON -->
-<button class="menu-btn" id="menuBtn" aria-label="Toggle menu">☰</button>
-
-<!-- SIDEBAR DRAWER -->
-<aside class="sidebar" id="sidebar">
-    <div class="brand">
-        <div class="brand-logo">A</div>
-        <div class="brand-text">
-            <strong>AssetGuard</strong>
-            <span>Property Manager</span>
-        </div>
-    </div>
-
-    <nav class="nav">
-        <a href="dashboard.html">
-            <span class="nav-icon">⌂</span>
-            <span>Dashboard</span>
-        </a>
-        <a href="payments.html" class="active">
-            <span class="nav-icon">₿</span>
-            <span>Payments</span>
-        </a>
-        <a href="units.html">
-            <span class="nav-icon">▦</span>
-            <span>Units & Tenants</span>
-        </a>
-        <a href="tenants.html">
-            <span class="nav-icon">♙</span>
-            <span>Tenants Directory</span>
-        </a>
-        <a href="maintenance.html">
-            <span class="nav-icon">🔧</span>
-            <span>Maintenance</span>
-        </a>
-        <a href="utilities.html">
-            <span class="nav-icon">⚡</span>
-            <span>Utilities</span>
-        </a>
-        <a href="statements.html">
-            <span class="nav-icon">▤</span>
-            <span>Statements</span>
-        </a>
-        <a href="expenses.html">
-            <span class="nav-icon">▣</span>
-            <span>Expenses</span>
-        </a>
-        <a href="reports.html">
-            <span class="nav-icon">◒</span>
-            <span>Financial Reports</span>
-        </a>
-        <a href="property.html">
-            <span class="nav-icon">⌂</span>
-            <span>Property Profile</span>
-        </a>
+    <!-- ===================================================== TOP NAVIGATION BAR ====================================================== -->
+    <nav class="navbar">
+      <div class="nav-brand"> 🏠 AssetGuard Pro </div>
     </nav>
 
-    <div class="sidebar-bottom">
-        <a href="settings.html">
-            <span class="nav-icon">⚙</span>
-            <span>Settings</span>
-        </a>
-        <a href="#" id="logoutBtn">
-            <span class="nav-icon">↪</span>
-            <span>Logout</span>
-        </a>
-    </div>
-</aside>
+    <!-- ===================================================== HEADER ====================================================== --> 
+    <header class="page-header"> 
+      <div class="page-title"> 
+        <div> 
+          <h1>Payment Management & Ledger</h1> 
+          <p>Record transactions and review historical financial ledgers</p> 
+        </div> 
+      </div> 
+      <div class="header-actions"> 
+        <button class="btn btn-secondary" onclick="exportLedgerCSV()"> 📥 Export </button> 
+      </div> 
+    </header> 
 
-<div class="overlay" id="overlay"></div>
+    <!-- ===================================================== STATISTICS ====================================================== --> 
+    <section class="stats"> 
+      <div class="stat"> 
+        <div class="stat-top"> 
+          <div class="stat-label"> Total Revenue </div> 
+          <div class="stat-icon" style="background:#dcfce7"> 💰 </div> 
+        </div> 
+        <div class="stat-value" id="statTotalCollected"> KES 0 </div> 
+        <div class="stat-note"> All-time logged </div> 
+      </div> 
+      <div class="stat"> 
+        <div class="stat-top"> 
+          <div class="stat-label"> M-Pesa </div> 
+          <div class="stat-icon" style="background:#e0f2fe"> 📱 </div> 
+        </div> 
+        <div class="stat-value" id="statMpesaCollected"> KES 0 </div> 
+        <div class="stat-note"> Mobile money </div> 
+      </div> 
+      <div class="stat"> 
+        <div class="stat-top"> 
+          <div class="stat-label"> Receipts </div> 
+          <div class="stat-icon" style="background:#fef3c7"> 🧾 </div> 
+        </div> 
+        <div class="stat-value" id="statCount"> 0 </div> 
+        <div class="stat-note"> Transactions </div> 
+      </div> 
+    </section> 
 
-<!-- MAIN CONTAINER -->
-<main class="main">
-<div class="app">
-
-    <!-- =====================================================
-         PAGE HEADER
-    ====================================================== -->
-
-    <div class="page-header">
-
-        <div class="page-heading">
-
-            <h1>Payments</h1>
-
-            <p>
-                Rent collection, payment tracking and tenant balances
-            </p>
-
-        </div>
-
-        <div class="header-actions">
-
-            <button
-                class="btn"
-                onclick="exportPayments()">
-                Export
-            </button>
-
-            <button
-                class="btn primary"
-                onclick="document.getElementById('tenant').focus()">
-                + Record Payment
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         KPI CARDS
-    ====================================================== -->
-
-    <div class="kpis">
-
-        <div class="kpi">
-
-            <div class="kpi-label">
-                Collected
-            </div>
-
-            <div class="kpi-value blue">
-                KES 750,000
-            </div>
-
-            <div class="kpi-sub">
-                September 2026
-            </div>
-
-        </div>
-
-
-        <div class="kpi">
-
-            <div class="kpi-label">
-                Expected
-            </div>
-
-            <div class="kpi-value">
-                KES 795,000
-            </div>
-
-            <div class="kpi-sub">
-                Monthly rent
-            </div>
-
-        </div>
-
-
-        <div class="kpi">
-
-            <div class="kpi-label">
-                Arrears
-            </div>
-
-            <div class="kpi-value red">
-                KES 45,000
-            </div>
-
-            <div class="kpi-sub">
-                4 tenants
-            </div>
-
-        </div>
-
-
-        <div class="kpi">
-
-            <div class="kpi-label">
-                Collection Rate
-            </div>
-
-            <div class="kpi-value green">
-                94.3%
-            </div>
-
-            <div class="kpi-sub">
-                38 of 42 units
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         WORKSPACE
-    ====================================================== -->
-
-    <div class="workspace">
-
-
-        <!-- =================================================
-             RECORD PAYMENT
-        ================================================== -->
-
+    <!-- ===================================================== CONTENT GRID ====================================================== --> 
+    <div class="main-grid">
+      <!-- Left Column: Quick Form to Record / Edit Payment -->
+      <div>
         <div class="card">
-
-            <div class="card-header">
-
-                <div class="card-title">
-                    Record Payment
+          <div class="card-header">
+            <div>
+              <div class="card-title" id="formCardTitle"> 💳 Log New Payment </div>
+              <div class="card-subtitle" id="formCardSubtitle"> Select tenant from records to auto-retrieve details </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <form id="paymentForm" onsubmit="event.preventDefault(); saveOrUpdatePayment();">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label"> House & Tenant <span class="required">*</span> </label>
+                  <select class="form-control" id="houseTenantSelect" required onchange="onHouseSelected()">
+                    <option value="">-- Choose Tenant / Occupied House --</option>
+                  </select>
                 </div>
 
-                <div class="card-note">
-                    New transaction
+                <div id="tenantDetailsPreview" class="info-preview" style="display:none;">
+                  <strong>Tenant:</strong> <span id="prevName">—</span><br>
+                  <strong>Phone:</strong> <span id="prevPhone">—</span><br>
+                  <strong>Monthly Rent:</strong> KES <span id="prevRent">0</span>
                 </div>
 
-            </div>
-
-
-            <div class="card-body">
-
-                <form id="paymentForm">
-
-                    <div class="form-grid">
-
-
-                        <div class="field full">
-
-                            <label>
-                                Tenant
-                            </label>
-
-                            <div class="lookup">
-
-                                <input
-                                    id="tenant"
-                                    list="tenantList"
-                                    placeholder="Search tenant name or unit"
-                                    required>
-
-                                <span class="lookup-icon">
-                                    🔍
-                                </span>
-
-                            </div>
-
-                            <datalist id="tenantList">
-
-                                <option value="John Doe — Unit A1">
-                                <option value="Jane Smith — Unit B3">
-                                <option value="Michael Johnson — Unit C2">
-                                <option value="Sarah Williams — Unit D4">
-
-                            </datalist>
-
-                        </div>
-
-
-                        <div class="field">
-
-                            <label>
-                                Unit
-                            </label>
-
-                            <select id="unit">
-
-                                <option value="">
-                                    Select
-                                </option>
-
-                                <option>A1</option>
-                                <option>A2</option>
-                                <option>A3</option>
-                                <option>B1</option>
-                                <option>B2</option>
-                                <option>B3</option>
-                                <option>C1</option>
-                                <option>C2</option>
-                                <option>D1</option>
-                                <option>D2</option>
-                                <option>D4</option>
-
-                            </select>
-
-                        </div>
-
-
-                        <div class="field">
-
-                            <label>
-                                Amount KES
-                            </label>
-
-                            <input
-                                type="number"
-                                id="amount"
-                                placeholder="0.00"
-                                min="0"
-                                required>
-
-                        </div>
-
-
-                        <div class="field">
-
-                            <label>
-                                Payment Date
-                            </label>
-
-                            <input
-                                type="date"
-                                id="paymentDate"
-                                required>
-
-                        </div>
-
-
-                        <div class="field">
-
-                            <label>
-                                Rent Period
-                            </label>
-
-                            <select id="period">
-
-                                <option>
-                                    September 2026
-                                </option>
-
-                                <option>
-                                    October 2026
-                                </option>
-
-                                <option>
-                                    August 2026
-                                </option>
-
-                            </select>
-
-                        </div>
-
-
-                        <div class="field full">
-
-                            <label>
-                                Payment Method
-                            </label>
-
-                            <div class="methods">
-
-
-                                <div class="method">
-
-                                    <input
-                                        type="radio"
-                                        name="method"
-                                        id="mpesa"
-                                        value="M-Pesa"
-                                        checked>
-
-                                    <label for="mpesa">
-                                        M-Pesa
-                                    </label>
-
-                                </div>
-
-
-                                <div class="method">
-
-                                    <input
-                                        type="radio"
-                                        name="method"
-                                        id="cash"
-                                        value="Cash">
-
-                                    <label for="cash">
-                                        Cash
-                                    </label>
-
-                                </div>
-
-
-                                <div class="method">
-
-                                    <input
-                                        type="radio"
-                                        name="method"
-                                        id="bank"
-                                        value="Bank">
-
-                                    <label for="bank">
-                                        Bank
-                                    </label>
-
-                                </div>
-
-
-                                <div class="method">
-
-                                    <input
-                                        type="radio"
-                                        name="method"
-                                        id="cheque"
-                                        value="Cheque">
-
-                                    <label for="cheque">
-                                        Cheque
-                                    </label>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="field">
-
-                            <label>
-                                Reference
-                            </label>
-
-                            <input
-                                id="reference"
-                                placeholder="M-Pesa / bank ref">
-
-                        </div>
-
-
-                        <div class="field">
-
-                            <label>
-                                Receipt No.
-                            </label>
-
-                            <input
-                                id="receiptNo"
-                                readonly>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="collection">
-
-                        <div class="collection-top">
-
-                            <span>
-                                Monthly collection progress
-                            </span>
-
-                            <strong class="green">
-                                94.3%
-                            </strong>
-
-                        </div>
-
-                        <div class="progress">
-
-                            <div class="progress-bar"></div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="form-actions">
-
-                        <button
-                            type="reset"
-                            class="btn">
-                            Clear
-                        </button>
-
-                        <button
-                            type="submit"
-                            class="btn primary">
-                            Save Payment
-                        </button>
-
-                    </div>
-
-                </form>
-
-            </div>
-
+                <div class="form-group">
+                  <label class="form-label"> Payment Type <span class="required">*</span> </label>
+                  <select class="form-control" id="payType" required>
+                    <option value="Rent"> Monthly Rent </option>
+                    <option value="Deposit"> Security Deposit </option>
+                    <option value="Utilities"> Utilities (Water/Garbage) </option>
+                    <option value="Other"> Other Fee </option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label"> Amount Paid (KES) <span class="required">*</span> </label>
+                  <input class="form-control" id="payAmount" type="number" min="1" step="0.01" required placeholder="10000">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label"> Payment Method <span class="required">*</span> </label>
+                  <select class="form-control" id="payMethod" required>
+                    <option value="M-Pesa"> M-Pesa </option>
+                    <option value="Bank Transfer"> Bank Transfer </option>
+                    <option value="Cash"> Cash </option>
+                    <option value="Cheque"> Cheque </option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label"> Transaction / Ref Code </label>
+                  <input class="form-control" id="payReference" placeholder="e.g. QHJ892K12L">
+                  <div class="help"> M-Pesa confirmation code or receipt ID. </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label"> Payment Date <span class="required">*</span> </label>
+                  <input class="form-control" id="payDate" type="date" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label"> Notes / Description </label>
+                  <textarea class="form-control" id="payNotes" placeholder="Optional notes..."></textarea>
+                </div>
+
+                <div style="display:flex; gap:6px; margin-top:4px;">
+                  <button type="submit" id="formSubmitBtn" class="btn btn-primary" style="flex:1;"> Save Transaction </button>
+                  <button type="button" id="formCancelBtn" class="btn btn-secondary" style="display:none; flex:1;" onclick="resetPaymentForm()"> Cancel </button>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
+      </div>
 
-
-        <!-- =================================================
-             PAYMENT HISTORY
-        ================================================== -->
-
+      <!-- Right Column: Historical Ledger -->
+      <div>
         <div class="card">
-
-            <div class="card-header">
-
-                <div class="card-title">
-                    Payment History
-                </div>
-
-                <div class="card-note">
-                    38 transactions
-                </div>
-
+          <div class="card-header">
+            <div>
+              <div class="card-title"> 📋 Payment Ledger </div>
+              <div class="card-subtitle" id="ledgerSubtitle"> Showing all recorded payments </div>
             </div>
-
-
-            <div class="filters">
-
+          </div>
+          <div class="card-body" style="padding:10px;">
+            <div style="margin-bottom:10px;">
+              <div class="toolbar">
                 <div class="search">
-
-                    <span>
-                        🔍
-                    </span>
-
-                    <input
-                        id="search"
-                        placeholder="Search tenant, unit or reference..."
-                        oninput="filterPayments()">
-
+                  <span class="search-icon"> 🔎 </span>
+                  <input id="searchInput" type="search" placeholder="Search reference, tenant, house..." oninput="renderLedger()">
                 </div>
-
-
-                <select
-                    id="methodFilter"
-                    onchange="filterPayments()">
-
-                    <option value="all">
-                        All Methods
-                    </option>
-
-                    <option value="M-Pesa">
-                        M-Pesa
-                    </option>
-
-                    <option value="Cash">
-                        Cash
-                    </option>
-
-                    <option value="Bank">
-                        Bank
-                    </option>
-
-                    <option value="Cheque">
-                        Cheque
-                    </option>
-
+                <select id="methodFilter" class="filter" onchange="renderLedger()">
+                  <option value="all"> All Methods </option>
+                  <option value="M-Pesa"> M-Pesa </option>
+                  <option value="Bank Transfer"> Bank Transfer </option>
+                  <option value="Cash"> Cash </option>
+                  <option value="Cheque"> Cheque </option>
                 </select>
-
-
-                <select
-                    id="statusFilter"
-                    onchange="filterPayments()">
-
-                    <option value="all">
-                        All Status
-                    </option>
-
-                    <option value="Paid">
-                        Paid
-                    </option>
-
-                    <option value="Pending">
-                        Pending
-                    </option>
-
-                    <option value="Partial">
-                        Partial
-                    </option>
-
-                </select>
-
+              </div>
             </div>
 
-
-            <div
-                class="payment-list"
-                id="paymentList">
-
-
-                <!-- PAYMENT 1 -->
-
-                <div
-                    class="payment"
-                    data-search="john doe a1 qwe123456 mpesa"
-                    data-method="M-Pesa"
-                    data-status="Paid">
-
-                    <div>
-
-                        <div class="payment-name">
-                            John Doe
-                        </div>
-
-                        <div class="payment-sub">
-                            Unit A1 • September Rent
-                        </div>
-
-                        <div class="payment-ref">
-                            Ref: QWE123456
-                        </div>
-
-                    </div>
-
-                    <div class="payment-right">
-
-                        <div class="payment-amount blue">
-                            KES 25,000
-                        </div>
-
-                        <div class="payment-date">
-                            Today, 10:42 AM
-                        </div>
-
-                    </div>
-
-                    <div class="payment-bottom">
-
-                        <div class="tags">
-
-                            <span class="tag green">
-                                M-Pesa
-                            </span>
-
-                            <span class="tag green">
-                                Paid
-                            </span>
-
-                        </div>
-
-                        <div class="payment-buttons">
-
-                            <button
-                                class="mini-btn"
-                                onclick="showReceipt(
-                                'John Doe',
-                                'A1',
-                                '25,000',
-                                'M-Pesa',
-                                'QWE123456')">
-                                Receipt
-                            </button>
-
-                            <button class="mini-btn">
-                                Edit
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- PAYMENT 2 -->
-
-                <div
-                    class="payment"
-                    data-search="jane smith b3 bank bank84931"
-                    data-method="Bank"
-                    data-status="Paid">
-
-                    <div>
-
-                        <div class="payment-name">
-                            Jane Smith
-                        </div>
-
-                        <div class="payment-sub">
-                            Unit B3 • September Rent
-                        </div>
-
-                        <div class="payment-ref">
-                            Ref: BANK-84931
-                        </div>
-
-                    </div>
-
-                    <div class="payment-right">
-
-                        <div class="payment-amount blue">
-                            KES 18,000
-                        </div>
-
-                        <div class="payment-date">
-                            Yesterday
-                        </div>
-
-                    </div>
-
-                    <div class="payment-bottom">
-
-                        <div class="tags">
-
-                            <span class="tag blue">
-                                Bank
-                            </span>
-
-                            <span class="tag green">
-                                Paid
-                            </span>
-
-                        </div>
-
-                        <div class="payment-buttons">
-
-                            <button
-                                class="mini-btn"
-                                onclick="showReceipt(
-                                'Jane Smith',
-                                'B3',
-                                '18,000',
-                                'Bank',
-                                'BANK-84931')">
-                                Receipt
-                            </button>
-
-                            <button class="mini-btn">
-                                Edit
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- PAYMENT 3 -->
-
-                <div
-                    class="payment"
-                    data-search="michael johnson c2 cash cash2209"
-                    data-method="Cash"
-                    data-status="Paid">
-
-                    <div>
-
-                        <div class="payment-name">
-                            Michael Johnson
-                        </div>
-
-                        <div class="payment-sub">
-                            Unit C2 • September Rent
-                        </div>
-
-                        <div class="payment-ref">
-                            Ref: CASH-2209
-                        </div>
-
-                    </div>
-
-                    <div class="payment-right">
-
-                        <div class="payment-amount blue">
-                            KES 20,000
-                        </div>
-
-                        <div class="payment-date">
-                            22 Sep 2026
-                        </div>
-
-                    </div>
-
-                    <div class="payment-bottom">
-
-                        <div class="tags">
-
-                            <span class="tag">
-                                Cash
-                            </span>
-
-                            <span class="tag green">
-                                Paid
-                            </span>
-
-                        </div>
-
-                        <div class="payment-buttons">
-
-                            <button
-                                class="mini-btn"
-                                onclick="showReceipt(
-                                'Michael Johnson',
-                                'C2',
-                                '20,000',
-                                'Cash',
-                                'CASH-2209')">
-                                Receipt
-                            </button>
-
-                            <button class="mini-btn">
-                                Edit
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- PAYMENT 4 -->
-
-                <div
-                    class="payment"
-                    data-search="sarah williams d4 mpesa stk88231"
-                    data-method="M-Pesa"
-                    data-status="Pending">
-
-                    <div>
-
-                        <div class="payment-name">
-                            Sarah Williams
-                        </div>
-
-                        <div class="payment-sub">
-                            Unit D4 • September Rent
-                        </div>
-
-                        <div class="payment-ref">
-                            Ref: STK-88231
-                        </div>
-
-                    </div>
-
-                    <div class="payment-right">
-
-                        <div class="payment-amount orange">
-                            KES 15,000
-                        </div>
-
-                        <div class="payment-date">
-                            21 Sep 2026
-                        </div>
-
-                    </div>
-
-                    <div class="payment-bottom">
-
-                        <div class="tags">
-
-                            <span class="tag green">
-                                M-Pesa
-                            </span>
-
-                            <span class="tag orange">
-                                Pending
-                            </span>
-
-                        </div>
-
-                        <div class="payment-buttons">
-
-                            <button class="mini-btn">
-                                View
-                            </button>
-
-                            <button class="mini-btn">
-                                Verify
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
+            <!-- Desktop Table View -->
+            <div class="desktop-table-view">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>House</th>
+                    <th>Tenant</th>
+                    <th>Type</th>
+                    <th>Method</th>
+                    <th>Reference</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="ledgerTableBody"></tbody>
+              </table>
             </div>
 
+            <!-- Mobile Card View -->
+            <div class="mobile-card-view" id="ledgerMobileCards"></div>
+          </div>
         </div>
-
+      </div>
     </div>
+  </div>
 
-
-    <!-- =====================================================
-         PAYMENT METHOD BREAKDOWN
-    ====================================================== -->
-
-    <div class="card breakdown">
-
-        <div class="card-header">
-
-            <div class="card-title">
-                Collection Breakdown
-            </div>
-
-            <div class="card-note">
-                September 2026
-            </div>
-
-        </div>
-
-
-        <div class="breakdown-grid">
-
-
-            <div class="breakdown-item">
-
-                <div class="breakdown-name">
-                    📱 M-Pesa
-                </div>
-
-                <div class="breakdown-value blue">
-                    KES 475,000
-                </div>
-
-                <div class="breakdown-count">
-                    24 transactions
-                </div>
-
-            </div>
-
-
-            <div class="breakdown-item">
-
-                <div class="breakdown-name">
-                    🏦 Bank
-                </div>
-
-                <div class="breakdown-value blue">
-                    KES 180,000
-                </div>
-
-                <div class="breakdown-count">
-                    8 transactions
-                </div>
-
-            </div>
-
-
-            <div class="breakdown-item">
-
-                <div class="breakdown-name">
-                    💵 Cash
-                </div>
-
-                <div class="breakdown-value green">
-                    KES 75,000
-                </div>
-
-                <div class="breakdown-count">
-                    5 transactions
-                </div>
-
-            </div>
-
-
-            <div class="breakdown-item">
-
-                <div class="breakdown-name">
-                    🧾 Cheque
-                </div>
-
-                <div class="breakdown-value orange">
-                    KES 20,000
-                </div>
-
-                <div class="breakdown-count">
-                    1 transaction
-                </div>
-
-            </div>
-
-        </div>
-
+  <!-- ===================================================== SECURITY MODAL OVERLAY ====================================================== -->
+  <div id="securityModal" class="modal-overlay">
+    <div class="security-modal">
+      <h3> 🔒 Protected Action </h3>
+      <p>Enter your security password (default: <strong>1234</strong>) to authorize this modification.</p>
+      <div class="form-group">
+        <label class="form-label">Security Password <span class="required">*</span></label>
+        <input type="password" id="securityPinInput" class="form-control" placeholder="Enter password..." autofocus>
+        <div id="securityErrorMsg" class="security-error">Incorrect password. Please try again.</div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" style="flex:1;" onclick="closeSecurityModal()">Cancel</button>
+        <button class="btn btn-primary" style="flex:1;" onclick="confirmSecurityAction()">Authorize</button>
+      </div>
+      <a href="settings.html" class="settings-link">⚙️ Want to change or edit password? Go to Settings</a>
     </div>
+  </div>
 
-</div>
-</main>
+  <div id="toast" class="toast"></div>
 
+  <!-- ===================================================== SCRIPT ====================================================== -->
+  <script>
+    const DB_KEY = "ag_rental_database";
+    let database = { houses: [] };
+    let pendingSecurityCallback = null;
+    let editingPaymentRef = null; 
 
-<!-- =========================================================
-     RECEIPT MODAL
-========================================================= -->
-
-<div
-    id="receiptModal"
-    class="modal">
-
-    <div class="modal-box">
-
-        <div class="modal-header">
-
-            <div class="modal-title">
-                Payment Receipt
-            </div>
-
-            <button
-                class="modal-close"
-                onclick="closeReceipt()">
-                ×
-            </button>
-
-        </div>
-
-        <div
-            id="receiptContent"
-            class="receipt">
-        </div>
-
-        <div class="modal-actions">
-
-            <button
-                class="btn"
-                onclick="closeReceipt()">
-                Close
-            </button>
-
-            <button
-                class="btn primary"
-                onclick="window.print()">
-                Print Receipt
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<script>
-/* =========================================================
-   SIDEBAR TOGGLE LOGIC
-========================================================= */
-const sidebar = document.getElementById("sidebar");
-const menuBtn = document.getElementById("menuBtn");
-const overlay = document.getElementById("overlay");
-
-function toggleSidebar(){
-    sidebar.classList.toggle("open");
-    overlay.classList.toggle("show");
-}
-
-function closeSidebar(){
-    sidebar.classList.remove("open");
-    overlay.classList.remove("show");
-}
-
-if(menuBtn){
-    menuBtn.addEventListener("click", toggleSidebar);
-}
-
-if(overlay){
-    overlay.addEventListener("click", closeSidebar);
-}
-
-document.querySelectorAll(".sidebar a").forEach(link => {
-    link.addEventListener("click", () => {
-        closeSidebar();
-    });
-});
-
-document.addEventListener("keydown", e => {
-    if(e.key === "Escape"){
-        closeSidebar();
-    }
-});
-
-/* =========================================================
-   DATE / RECEIPT
-========================================================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function(){
-
-        const date =
-            document.getElementById("paymentDate");
-
-        if(date){
-
-            date.value =
-                new Date()
-                .toISOString()
-                .split("T")[0];
-
+    function loadDatabase() {
+      try {
+        const raw = localStorage.getItem(DB_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && Array.isArray(parsed.houses)) {
+            database = parsed;
+          }
         }
-
-        document.getElementById("receiptNo").value =
-            generateReceipt();
-
+      } catch (e) {
+        console.error("Error loading database:", e);
+        database = { houses: [] };
+      }
     }
-);
 
+    function saveDatabase() {
+      localStorage.setItem(DB_KEY, JSON.stringify(database));
+    }
 
-function generateReceipt(){
+    function money(value) {
+      return (Number(value) || 0).toLocaleString("en-KE", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    }
 
-    const d = new Date();
+    function formatDate(value) {
+      if (!value) return "—";
+      const date = new Date(value + (String(value).length === 10 ? "T00:00:00" : ""));
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+    }
 
-    const random =
-        Math.floor(
-            1000 +
-            Math.random() * 9000
-        );
+    function today() {
+      const date = new Date();
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
 
-    return "AG-" +
-        d.getFullYear() +
-        String(d.getMonth()+1).padStart(2,"0") +
-        String(d.getDate()).padStart(2,"0") +
-        "-" +
-        random;
-}
+    function toast(message) {
+      const el = document.getElementById("toast");
+      if (!el) return;
+      el.textContent = message;
+      el.classList.add("show");
+      clearTimeout(el.timer);
+      el.timer = setTimeout(() => el.classList.remove("show"), 3500);
+    }
 
+    function uid(prefix = "pay") {
+      return prefix + "_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 8);
+    }
 
-/* =========================================================
-   PAYMENT FORM
-========================================================= */
+    function esc(val) {
+      return String(val ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
 
-document
-.getElementById("paymentForm")
-.addEventListener(
-    "submit",
-    function(e){
+    /* ===================================================== SECURITY FLOW ====================================================== */
+    function promptSecurityAuth(callback) {
+      pendingSecurityCallback = callback;
+      const modal = document.getElementById("securityModal");
+      const input = document.getElementById("securityPinInput");
+      const errorMsg = document.getElementById("securityErrorMsg");
+      
+      input.value = "";
+      errorMsg.style.display = "none";
+      modal.classList.add("active");
+      setTimeout(() => input.focus(), 100);
+    }
 
-        e.preventDefault();
+    function closeSecurityModal() {
+      const modal = document.getElementById("securityModal");
+      modal.classList.remove("active");
+      pendingSecurityCallback = null;
+    }
 
-        const tenant =
-            document.getElementById("tenant").value;
+    function confirmSecurityAction() {
+      const input = document.getElementById("securityPinInput");
+      const errorMsg = document.getElementById("securityErrorMsg");
+      const enteredValue = input.value.trim();
 
-        const unit =
-            document.getElementById("unit").value;
+      const currentPassword = localStorage.getItem("ag_security_password") || "1234";
 
-        const amount =
-            document.getElementById("amount").value;
-
-        const method =
-            document.querySelector(
-                'input[name="method"]:checked'
-            ).value;
-
-        if(!tenant || !unit || !amount){
-
-            alert(
-                "Please complete the tenant, unit and amount."
-            );
-
-            return;
+      if (enteredValue === currentPassword) {
+        closeSecurityModal();
+        if (typeof pendingSecurityCallback === "function") {
+          pendingSecurityCallback();
         }
-
-        alert(
-            "Payment saved successfully."
-        );
-
-        this.reset();
-
-        document.getElementById("paymentDate").value =
-            new Date()
-            .toISOString()
-            .split("T")[0];
-
-        document.getElementById("receiptNo").value =
-            generateReceipt();
-
-        document.getElementById("mpesa").checked =
-            true;
-
+      } else {
+        errorMsg.style.display = "block";
+        input.focus();
+      }
     }
-);
 
-
-/* =========================================================
-   FILTER
-========================================================= */
-
-function filterPayments(){
-
-    const search =
-        document
-        .getElementById("search")
-        .value
-        .toLowerCase()
-        .trim();
-
-    const method =
-        document
-        .getElementById("methodFilter")
-        .value;
-
-    const status =
-        document
-        .getElementById("statusFilter")
-        .value;
-
-    document
-    .querySelectorAll(".payment")
-    .forEach(function(item){
-
-        const text =
-            item.dataset.search || "";
-
-        const itemMethod =
-            item.dataset.method || "";
-
-        const itemStatus =
-            item.dataset.status || "";
-
-        const searchOK =
-            !search ||
-            text.includes(search);
-
-        const methodOK =
-            method === "all" ||
-            itemMethod === method;
-
-        const statusOK =
-            status === "all" ||
-            itemStatus === status;
-
-        item.style.display =
-            searchOK &&
-            methodOK &&
-            statusOK
-            ? "grid"
-            : "none";
-
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("securityPinInput").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          confirmSecurityAction();
+        }
+      });
     });
 
-}
+    // Collects active tenants dynamically from the shared database (populated by tenants.html)
+    function populateHouseDropdown() {
+      loadDatabase(); // Ensure latest data from tenants.html is fetched
+      const select = document.getElementById("houseTenantSelect");
+      select.innerHTML = `<option value="">-- Choose Tenant / Occupied House --</option>`;
+      
+      database.houses.forEach(house => {
+        const tenants = Array.isArray(house.tenants) ? house.tenants : [];
+        tenants.forEach(tenant => {
+          // Check if tenant is active (or registered) based on tenants.html status
+          const status = String(tenant.status || "").toLowerCase();
+          if (status === "active" || status === "") {
+            const opt = document.createElement("option");
+            opt.value = `${house.id}|${tenant.id}`;
+            opt.textContent = `${tenant.name} — House ${house.houseNumber} (KES ${money(tenant.monthlyRent || house.monthlyRent)})`;
+            select.appendChild(opt);
+          }
+        });
+      });
+    }
 
+    function onHouseSelected() {
+      const val = document.getElementById("houseTenantSelect").value;
+      const previewBox = document.getElementById("tenantDetailsPreview");
+      if (!val) {
+        previewBox.style.display = "none";
+        if (!editingPaymentRef) {
+          document.getElementById("payAmount").value = "";
+        }
+        return;
+      }
+      const [houseId, tenantId] = val.split("|");
+      const house = database.houses.find(h => h.id === houseId);
+      if (!house) return;
+      const tenant = (house.tenants || []).find(t => t.id === tenantId);
+      if (!tenant) return;
 
-/* =========================================================
-   RECEIPT
-========================================================= */
+      document.getElementById("prevName").textContent = tenant.name;
+      document.getElementById("prevPhone").textContent = tenant.phone || "—";
+      document.getElementById("prevRent").textContent = money(tenant.monthlyRent || house.monthlyRent);
+      if (!editingPaymentRef) {
+        document.getElementById("payAmount").value = tenant.monthlyRent || house.monthlyRent || "";
+      }
+      previewBox.style.display = "block";
+    }
 
-function showReceipt(
-    tenant,
-    unit,
-    amount,
-    method,
-    reference
-){
+    function saveOrUpdatePayment() {
+      const val = document.getElementById("houseTenantSelect").value;
+      if (!val) {
+        toast("Please select a tenant and house.");
+        return;
+      }
+      const [houseId, tenantId] = val.split("|");
+      const house = database.houses.find(h => h.id === houseId);
+      if (!house) {
+        toast("House not found.");
+        return;
+      }
+      const tenant = (house.tenants || []).find(t => t.id === tenantId);
+      if (!tenant) {
+        toast("Tenant not found.");
+        return;
+      }
 
-    const content =
-        document.getElementById(
-            "receiptContent"
-        );
+      if (!Array.isArray(tenant.payments)) {
+        tenant.payments = [];
+      }
 
-    const date =
-        new Date().toLocaleDateString(
-            "en-KE",
-            {
-                day:"2-digit",
-                month:"short",
-                year:"numeric"
-            }
-        );
+      if (editingPaymentRef) {
+        const pay = tenant.payments.find(p => p.id === editingPaymentRef.paymentId);
+        if (pay) {
+          pay.type = document.getElementById("payType").value;
+          pay.amount = Number(document.getElementById("payAmount").value) || 0;
+          pay.method = document.getElementById("payMethod").value;
+          pay.reference = document.getElementById("payReference").value.trim().toUpperCase();
+          pay.date = document.getElementById("payDate").value;
+          pay.notes = document.getElementById("payNotes").value.trim();
+          pay.updatedAt = new Date().toISOString();
+        }
+        house.updatedAt = new Date().toISOString();
+        saveDatabase();
+        resetPaymentForm();
+        renderAll();
+        toast("Payment transaction updated successfully.");
+      } else {
+        const payment = {
+          id: uid("pay"),
+          type: document.getElementById("payType").value,
+          amount: Number(document.getElementById("payAmount").value) || 0,
+          method: document.getElementById("payMethod").value,
+          reference: document.getElementById("payReference").value.trim().toUpperCase(),
+          date: document.getElementById("payDate").value,
+          notes: document.getElementById("payNotes").value.trim(),
+          createdAt: new Date().toISOString()
+        };
 
-    content.innerHTML = `
+        tenant.payments.push(payment);
+        house.updatedAt = new Date().toISOString();
+        saveDatabase();
 
-        <div class="receipt-brand">
-            ASSETGUARD PRO
-        </div>
+        document.getElementById("paymentForm").reset();
+        document.getElementById("payDate").value = today();
+        document.getElementById("tenantDetailsPreview").style.display = "none";
+        populateHouseDropdown();
+        renderAll();
+        toast(`Successfully logged KES ${money(payment.amount)} via ${payment.method}!`);
+      }
+    }
 
-        <div class="receipt-sub">
-            MODERN RENTAL MANAGEMENT
-        </div>
+    function resetPaymentForm() {
+      editingPaymentRef = null;
+      document.getElementById("paymentForm").reset();
+      document.getElementById("payDate").value = today();
+      document.getElementById("tenantDetailsPreview").style.display = "none";
+      document.getElementById("formCardTitle").textContent = "💳 Log New Payment";
+      document.getElementById("formCardSubtitle").textContent = "Select tenant from records to auto-retrieve details";
+      document.getElementById("formSubmitBtn").textContent = "Save Transaction";
+      document.getElementById("formCancelBtn").style.display = "none";
+      populateHouseDropdown();
+    }
 
-        <div class="receipt-title">
-            RENT PAYMENT RECEIPT
-        </div>
+    function handleRowAction(selectElem, houseId, tenantId, payId) {
+      const action = selectElem.value;
+      selectElem.value = ""; 
+      if (!action) return;
 
-        <div class="receipt-row">
-            <span>Tenant</span>
-            <strong>${tenant}</strong>
-        </div>
+      if (action === "edit") {
+        promptSecurityAuth(() => {
+          initEditPayment(houseId, tenantId, payId);
+        });
+      } else if (action === "delete") {
+        promptSecurityAuth(() => {
+          deletePaymentRecord(houseId, tenantId, payId);
+        });
+      } else if (action === "print") {
+        printReceipt(houseId, tenantId, payId);
+      }
+    }
 
-        <div class="receipt-row">
-            <span>Unit</span>
-            <strong>${unit}</strong>
-        </div>
+    function initEditPayment(houseId, tenantId, payId) {
+      const house = database.houses.find(h => h.id === houseId);
+      if (!house) return;
+      const tenant = (house.tenants || []).find(t => t.id === tenantId);
+      if (!tenant) return;
+      const pay = (tenant.payments || []).find(p => p.id === payId);
+      if (!pay) return;
 
-        <div class="receipt-row">
-            <span>Date</span>
-            <strong>${date}</strong>
-        </div>
+      editingPaymentRef = { houseId, tenantId, paymentId: payId };
 
-        <div class="receipt-row">
-            <span>Payment Method</span>
-            <strong>${method}</strong>
-        </div>
+      populateHouseDropdown();
+      document.getElementById("houseTenantSelect").value = `${houseId}|${tenantId}`;
+      onHouseSelected();
 
-        <div class="receipt-row">
-            <span>Reference</span>
-            <strong>${reference}</strong>
-        </div>
+      document.getElementById("payType").value = pay.type || "Rent";
+      document.getElementById("payAmount").value = pay.amount || "";
+      document.getElementById("payMethod").value = pay.method || "M-Pesa";
+      document.getElementById("payReference").value = pay.reference || "";
+      document.getElementById("payDate").value = pay.date || today();
+      document.getElementById("payNotes").value = pay.notes || "";
 
-        <div class="receipt-total">
-            <span>TOTAL PAID</span>
-            <span>KES ${amount}</span>
-        </div>
+      document.getElementById("formCardTitle").textContent = "✏️ Edit Payment Record";
+      document.getElementById("formCardSubtitle").textContent = `Updating transaction Ref: ${pay.reference || 'N/A'}`;
+      document.getElementById("formSubmitBtn").textContent = "Update Transaction";
+      document.getElementById("formCancelBtn").style.display = "inline-flex";
 
-        <div class="receipt-sub" style="margin-top:15px;">
-            Thank you for your payment.
-        </div>
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      toast("Authorized. Edit payment details in the form.");
+    }
 
-    `;
+    function deletePaymentRecord(houseId, tenantId, payId) {
+      const house = database.houses.find(h => h.id === houseId);
+      if (!house) return;
+      const tenant = (house.tenants || []).find(t => t.id === tenantId);
+      if (!tenant) return;
 
-    document
-    .getElementById("receiptModal")
-    .classList.add("show");
+      tenant.payments = (tenant.payments || []).filter(p => p.id !== payId);
+      house.updatedAt = new Date().toISOString();
+      saveDatabase();
 
-}
+      if (editingPaymentRef && editingPaymentRef.paymentId === payId) {
+        resetPaymentForm();
+      }
 
+      renderAll();
+      toast("Payment transaction deleted securely.");
+    }
 
-function closeReceipt(){
+    function printReceipt(houseId, tenantId, payId) {
+      const house = database.houses.find(h => h.id === houseId);
+      if (!house) return;
+      const tenant = (house.tenants || []).find(t => t.id === tenantId);
+      if (!tenant) return;
+      const pay = (tenant.payments || []).find(p => p.id === payId);
+      if (!pay) return;
 
-    document
-    .getElementById("receiptModal")
-    .classList.remove("show");
+      const receiptWindow = window.open("", "_blank", "width=400,height=600");
+      receiptWindow.document.write(`
+        <html>
+        <head>
+          <title>Receipt - House ${esc(house.houseNumber)}</title>
+          <style>
+            body { font-family: monospace; padding: 20px; color: #111; max-width: 320px; margin: auto; }
+            h2 { text-align: center; margin-bottom: 2px; font-size: 16px; }
+            .sub { text-align: center; font-size: 11px; color: #555; margin-bottom: 15px; }
+            .divider { border-top: 1px dashed #333; margin: 10px 0; }
+            .row { display: flex; justify-content: space-between; font-size: 12px; margin: 6px 0; }
+            .total { font-weight: bold; font-size: 14px; margin-top: 10px; }
+            .footer { text-align: center; font-size: 10px; margin-top: 20px; color: #666; }
+          </style>
+        </head>
+        <body>
+          <h2>AssetGuard Pro</h2>
+          <div class="sub">Official Payment Receipt</div>
+          <div class="divider"></div>
+          <div class="row"><span>Date:</span> <span>${formatDate(pay.date)}</span></div>
+          <div class="row"><span>House No:</span> <span>${esc(house.houseNumber)}</span></div>
+          <div class="row"><span>Tenant:</span> <span>${esc(tenant.name)}</span></div>
+          <div class="row"><span>Type:</span> <span>${esc(pay.type)}</span></div>
+          <div class="row"><span>Method:</span> <span>${esc(pay.method)}</span></div>
+          <div class="row"><span>Reference:</span> <span>${esc(pay.reference || "N/A")}</span></div>
+          ${pay.notes ? `<div class="row"><span>Notes:</span> <span>${esc(pay.notes)}</span></div>` : ''}
+          <div class="divider"></div>
+          <div class="row total"><span>Amount Paid:</span> <span>KES ${money(pay.amount)}</span></div>
+          <div class="divider"></div>
+          <div class="footer">Thank you!<br>AssetGuard Pro Property Management</div>
+          <script>
+            window.onload = function() { window.print(); }
+          <\/script>
+        </body>
+        </html>
+      `);
+      receiptWindow.document.close();
+    }
 
-}
+    function getAllPayments() {
+      let list = [];
+      database.houses.forEach(house => {
+        (house.tenants || []).forEach(tenant => {
+          (tenant.payments || []).forEach(pay => {
+            list.push({
+              ...pay,
+              houseNumber: house.houseNumber,
+              tenantName: tenant.name,
+              houseId: house.id,
+              tenantId: tenant.id
+            });
+          });
+        });
+      });
+      return list.sort((a, b) => new Date(b.date || b.createdAt) - new Date(a.date || a.createdAt));
+    }
 
+    function renderLedger() {
+      loadDatabase();
+      const tableBody = document.getElementById("ledgerTableBody");
+      const mobileCards = document.getElementById("ledgerMobileCards");
+      const search = document.getElementById("searchInput").value.trim().toLowerCase();
+      const method = document.getElementById("methodFilter").value;
+      const allPayments = getAllPayments();
 
-/* =========================================================
-   EXPORT CSV
-========================================================= */
+      const filtered = allPayments.filter(p => {
+        const haystack = [p.reference, p.tenantName, p.houseNumber, p.type, p.notes].join(" ").toLowerCase();
+        if (search && !haystack.includes(search)) return false;
+        if (method !== "all" && p.method !== method) return false;
+        return true;
+      });
 
-function exportPayments(){
+      document.getElementById("ledgerSubtitle").textContent = `${filtered.length} transaction(s) found`;
 
-    const rows = [
+      if (!filtered.length) {
+        const emptyHtml = `
+          <div class="empty">
+            <div class="empty-icon"> 💳 </div>
+            <h3>No payment transactions found</h3>
+            <p>Record a rent or deposit payment using the form.</p>
+          </div>
+        `;
+        tableBody.innerHTML = `<tr><td colspan="8">${emptyHtml}</td></tr>`;
+        mobileCards.innerHTML = emptyHtml;
+        return;
+      }
 
-        [
-            "Tenant",
-            "Unit",
-            "Date",
-            "Amount",
-            "Method",
-            "Status",
-            "Reference"
-        ],
+      tableBody.innerHTML = filtered.map(p => {
+        let badgeClass = "badge-cheque";
+        if (p.method === "M-Pesa") badgeClass = "badge-mpesa";
+        else if (p.method === "Bank Transfer") badgeClass = "badge-bank";
+        else if (p.method === "Cash") badgeClass = "badge-cash";
 
-        [
-            "John Doe",
-            "A1",
-            "25 Sep 2026",
-            "25000",
-            "M-Pesa",
-            "Paid",
-            "QWE123456"
-        ],
+        return `
+          <tr>
+            <td>${formatDate(p.date)}</td>
+            <td><strong>${esc(p.houseNumber)}</strong></td>
+            <td>${esc(p.tenantName)}</td>
+            <td>${esc(p.type)}</td>
+            <td><span class="badge ${badgeClass}">${esc(p.method)}</span></td>
+            <td><code>${esc(p.reference || "—")}</code></td>
+            <td class="money">KES ${money(p.amount)}</td>
+            <td>
+              <select class="form-control" style="font-size:9px; height:26px; width:110px; padding:0 4px;" onchange="handleRowAction(this, '${p.houseId}', '${p.tenantId}', '${p.id}')">
+                <option value="">⚙️ Action</option>
+                <option value="edit">✏️ Edit</option>
+                <option value="delete">🗑️ Delete</option>
+                <option value="print">🖨️ Print Receipt</option>
+              </select>
+            </td>
+          </tr>
+        `;
+      }).join("");
 
-        [
-            "Jane Smith",
-            "B3",
-            "24 Sep 2026",
-            "18000",
-            "Bank",
-            "Paid",
-            "BANK-84931"
-        ],
+      mobileCards.innerHTML = filtered.map(p => {
+        let badgeClass = "badge-cheque";
+        if (p.method === "M-Pesa") badgeClass = "badge-mpesa";
+        else if (p.method === "Bank Transfer") badgeClass = "badge-bank";
+        else if (p.method === "Cash") badgeClass = "badge-cash";
 
-        [
-            "Michael Johnson",
-            "C2",
-            "22 Sep 2026",
-            "20000",
-            "Cash",
-            "Paid",
-            "CASH-2209"
-        ],
+        return `
+          <div class="m-card">
+            <div class="m-card-top">
+              <span class="m-card-house">🏠 House ${esc(p.houseNumber)}</span>
+              <span class="m-card-amount">KES ${money(p.amount)}</span>
+            </div>
+            <div class="m-card-grid">
+              <div><strong>Tenant:</strong> ${esc(p.tenantName)}</div>
+              <div><strong>Type:</strong> ${esc(p.type)}</div>
+              <div><strong>Method:</strong> <span class="badge ${badgeClass}">${esc(p.method)}</span></div>
+              <div><strong>Ref:</strong> <code>${esc(p.reference || "—")}</code></div>
+            </div>
+            ${p.notes ? `<div style="font-size:9px; color:var(--muted); margin-bottom:6px;"><strong>Notes:</strong> ${esc(p.notes)}</div>` : ''}
+            <div class="m-card-footer">
+              <span>📅 ${formatDate(p.date)}</span>
+              <select class="form-control" style="font-size:9px; height:26px; width:120px; padding:0 4px;" onchange="handleRowAction(this, '${p.houseId}', '${p.tenantId}', '${p.id}')">
+                <option value="">⚙️ Action</option>
+                <option value="edit">✏️ Edit</option>
+                <option value="delete">🗑️ Delete</option>
+                <option value="print">🖨️ Print Receipt</option>
+              </select>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
 
-        [
-            "Sarah Williams",
-            "D4",
-            "21 Sep 2026",
-            "15000",
-            "M-Pesa",
-            "Pending",
-            "STK-88231"
-        ]
+    function renderStats() {
+      const all = getAllPayments();
+      let total = 0;
+      let mpesa = 0;
+      all.forEach(p => {
+        const amt = Number(p.amount) || 0;
+        total += amt;
+        if (p.method === "M-Pesa") mpesa += amt;
+      });
 
-    ];
+      document.getElementById("statTotalCollected").textContent = `KES ${money(total)}`;
+      document.getElementById("statMpesaCollected").textContent = `KES ${money(mpesa)}`;
+      document.getElementById("statCount").textContent = all.length;
+    }
 
-    const csv =
-        rows
-        .map(
-            row =>
-                row
-                .map(
-                    value =>
-                        `"${String(value)
-                        .replace(/"/g,'""')}"`
-                )
-                .join(",")
-        )
-        .join("\n");
+    function exportLedgerCSV() {
+      const all = getAllPayments();
+      if (!all.length) {
+        toast("No transactions to export.");
+        return;
+      }
+      let csv = "Date,House,Tenant,Type,Method,Reference,Amount (KES),Notes\n";
+      all.forEach(p => {
+        csv += `"${p.date}","${p.houseNumber}","${p.tenantName}","${p.type}","${p.method}","${p.reference || ""}","${p.amount}","${(p.notes || "").replace(/"/g, '""')}"\n`;
+      });
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `payments_ledger_${today()}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast("Ledger exported successfully!");
+    }
 
-    const blob =
-        new Blob(
-            [csv],
-            {
-                type:"text/csv;charset=utf-8;"
-            }
-        );
+    function renderAll() {
+      renderStats();
+      renderLedger();
+    }
 
-    const url =
-        URL.createObjectURL(blob);
-
-    const a =
-        document.createElement("a");
-
-    a.href = url;
-    a.download =
-        "AssetGuard-Payments.csv";
-
-    document.body.appendChild(a);
-
-    a.click();
-
-    document.body.removeChild(a);
-
-    URL.revokeObjectURL(url);
-
-}
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-const logoutBtn = document.getElementById("logoutBtn");
-
-if(logoutBtn){
-    logoutBtn.addEventListener("click", function(e){
-        e.preventDefault();
-        try{ sessionStorage.removeItem("ag_authenticated"); }catch(err){}
-        try{ localStorage.removeItem("ag_session_active"); }catch(err){}
-        window.location.href = "index.html";
+    document.addEventListener("DOMContentLoaded", () => {
+      loadDatabase();
+      populateHouseDropdown();
+      document.getElementById("payDate").value = today();
+      renderAll();
     });
-}
-</script>
-
+  </script>
 </body>
 </html>
