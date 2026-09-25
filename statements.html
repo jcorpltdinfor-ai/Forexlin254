@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0072CE">
+<title>AssetGuard Pro - Statements</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f7fb;--card:#ffffff;--line:#e6ebf2;--text:#102033;--muted:#6b7a8c;--blue:#0072CE;--blue-dark:#001A35;--blue-light:#eaf5ff;--orange:#ff6b00;--green:#10a56a;--red:#e5484d;--sidebar:195px;--radius:12px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar);background:var(--blue-dark);color:#fff;z-index:1000;display:flex;flex-direction:column;padding:14px 10px;}
+.brand{display:flex;align-items:center;gap:9px;padding:3px 7px 16px;}
+.brand-logo{width:31px;height:31px;border-radius:9px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;flex:none;}
+.brand-text strong{display:block;font-size:14px;font-weight:800;}
+.brand-text span{display:block;margin-top:3px;color:#8fa5bc;font-size:8px;letter-spacing:.7px;text-transform:uppercase;}
+.nav{display:flex;flex-direction:column;gap:3px;}
+.nav a{display:flex;align-items:center;gap:9px;min-height:35px;padding:7px 9px;color:#b9c7d6;text-decoration:none;border-radius:8px;font-size:10px;font-weight:600;}
+.nav a:hover{background:rgba(255,255,255,.07);color:#fff;}
+.nav a.active{background:var(--blue);color:#fff;}
+.nav-icon{width:18px;text-align:center;font-size:14px;flex:none;}
+.sidebar-bottom{margin-top:auto;border-top:1px solid rgba(255,255,255,.08);padding-top:10px;}
+.sidebar-bottom a{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:8px;color:#9fb1c4;text-decoration:none;font-size:10px;font-weight:600;}
+.main{margin-left:var(--sidebar);min-height:100vh;}
+.topbar{height:58px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 22px 0 68px;position:sticky;top:0;z-index:500;}
+.menu-btn{display:flex!important;align-items:center;justify-content:center;position:fixed;top:12px;left:14px;width:38px;height:38px;background:var(--blue-dark);color:#ffffff;border:1px solid rgba(255,255,255,0.2);border-radius:10px;text-decoration:none;cursor:pointer;font-size:16px;z-index:1100;box-shadow:0 4px 12px rgba(0,26,53,0.25);}
+.page-title{font-size:16px;font-weight:800;color:var(--blue-dark);}
+.page-subtitle{margin-top:2px;font-size:9px;color:var(--muted);}
+.content{padding:18px 22px 30px;max-width:1500px;margin:auto;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:14px;}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.card-title{font-size:12px;font-weight:800;color:var(--blue-dark);}
+.form-group{margin-bottom:12px;}
+.form-group label{display:block;font-size:9px;font-weight:700;color:var(--muted);margin-bottom:4px;}
+.form-group select{width:100%;height:36px;border:1px solid var(--line);border-radius:8px;padding:0 10px;font-size:10px;outline:none;font-family:inherit;}
+.btn-primary{background:var(--blue);color:#fff;border:0;border-radius:8px;padding:7px 14px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;}
+.statement-box{background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:16px;margin-top:12px;}
+.statement-row{display:flex;justify-content:between;margin-bottom:8px;font-size:10px;}
+@media print{
+  .sidebar, .menu-btn, .form-group, .btn-primary{display:none!important;}
+  .main{margin-left:0!important;}
+  body{background:#fff!important;}
+  .card{border:none!important;box-shadow:none!important;}
+}
+@media(max-width:700px){.sidebar{display:none;}.main{margin-left:0;}.topbar{padding:0 12px 0 58px;}}
+</style>
+</head>
+<body>
+
+<a href="dashboard.html" class="menu-btn" title="Return to Dashboard">☰</a>
+
+<aside class="sidebar">
+    <div class="brand">
+        <div class="brand-logo">A</div>
+        <div class="brand-text"><strong>AssetGuard</strong><span>Property Manager</span></div>
+    </div>
+    <nav class="nav">
+        <a href="dashboard.html"><span class="nav-icon">⌂</span><span>Dashboard</span></a>
+        <a href="payments.html"><span class="nav-icon">₿</span><span>Payments</span></a>
+        <a href="units.html"><span class="nav-icon">▦</span><span>Units & Tenants</span></a>
+        <a href="tenants.html"><span class="nav-icon">♙</span><span>Tenants Directory</span></a>
+        <a href="maintenance.html"><span class="nav-icon">🔧</span><span>Maintenance</span></a>
+        <a href="utilities.html"><span class="nav-icon">⚡</span><span>Utilities</span></a>
+        <a href="statements.html" class="active"><span class="nav-icon">▤</span><span>Statements</span></a>
+        <a href="expenses.html"><span class="nav-icon">▣</span><span>Expenses</span></a>
+        <a href="reports.html"><span class="nav-icon">◒</span><span>Financial Reports</span></a>
+        <a href="property.html"><span class="nav-icon">⌂</span><span>Property Profile</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+        <a href="settings.html"><span class="nav-icon">⚙</span><span>Settings</span></a>
+        <a href="index.html"><span class="nav-icon">↪</span><span>Logout</span></a>
+    </div>
+</aside>
+
+<main class="main">
+    <header class="topbar">
+        <div>
+            <div class="page-title">Tenant Account Statements</div>
+            <div class="page-subtitle">Generate official financial statements per unit</div>
+        </div>
+    </header>
+
+    <section class="content">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Select Account</div>
+            </div>
+            <div class="form-group">
+                <label>Choose Unit & Tenant</label>
+                <select id="statementSelect" onchange="loadStatement()">
+                    <!-- Populated via script -->
+                </select>
+            </div>
+        </div>
+
+        <div class="card" id="statementCard">
+            <div class="card-header">
+                <div class="card-title" id="statementHeading">Official Statement of Account</div>
+                <button class="btn-primary" onclick="window.print()">🖨️ Print Statement</button>
+            </div>
+            <div class="statement-box" id="statementDetails">
+                <!-- Dynamic Statement Content -->
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+function initStatements(){
+    const data = JSON.parse(localStorage.getItem("ag_database")) || [];
+    const select = document.getElementById("statementSelect");
+    select.innerHTML = "";
+
+    data.forEach((item, index) => {
+        const opt = document.createElement("option");
+        opt.value = index;
+        opt.textContent = `${item.unit} - ${item.tenant} (${item.status})`;
+        select.appendChild(opt);
+    });
+
+    if(data.length > 0){
+        loadStatement();
+    }
+}
+
+function loadStatement(){
+    const data = JSON.parse(localStorage.getItem("ag_database")) || [];
+    const idx = document.getElementById("statementSelect").value;
+    const item = data[idx];
+    
+    if(!item) return;
+
+    document.getElementById("statementHeading").innerText = `Statement: ${item.unit} (${item.tenant})`;
+    
+    const details = document.getElementById("statementDetails");
+    details.innerHTML = `
+        <div style="margin-bottom:10px;"><strong>AssetGuard Executive Residences</strong></div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;font-size:10px;">
+            <div><strong>Unit:</strong> ${item.unit}</div>
+            <div><strong>Tenant:</strong> ${item.tenant}</div>
+            <div><strong>Contact Phone:</strong> ${item.phone}</div>
+            <div><strong>Occupancy Status:</strong> ${item.status}</div>
+        </div>
+        <hr style="border:0;border-top:1px solid var(--line);margin:10px 0;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span>Monthly Base Rent:</span> <strong>$${item.rent.toLocaleString()}</strong></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span>Current Outstanding Balance:</span> <strong style="color:${item.balance > 0 ? 'var(--red)' : 'var(--green)'};">$${item.balance.toLocaleString()}</strong></div>
+        <div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);"><span>Total Due / Payable:</span> <strong style="font-size:12px;color:var(--blue-dark);">$${(item.rent + item.balance).toLocaleString()}</strong></div>
+    `;
+}
+
+initStatements();
+</script>
+</body>
+</html>
