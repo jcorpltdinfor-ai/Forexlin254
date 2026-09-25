@@ -547,23 +547,18 @@ body{
 }
 
 @media(max-width:900px){
-
     :root{
         --sidebar:190px;
     }
-
     .metrics{
         grid-template-columns:repeat(2,1fr);
     }
-
     .quick-actions{
         grid-template-columns:repeat(2,1fr);
     }
-
     .occupancy-layout{
         grid-template-columns:1fr;
     }
-
     .occupancy-summary{
         border-left:0;
         border-top:1px solid var(--line);
@@ -573,115 +568,90 @@ body{
 }
 
 @media(max-width:700px){
-
     .sidebar{
         transform:translateX(-100%);
         box-shadow:8px 0 25px rgba(0,0,0,.15);
     }
-
     .sidebar.open{
         transform:translateX(0);
     }
-
     .overlay.show{
         display:block;
     }
-
     .main{
         margin-left:0;
     }
-
     .topbar{
         height:54px;
         padding:0 12px 0 58px;
     }
-
     .profile-text{
         display:none;
     }
-
     .content{
         padding:14px 12px 24px;
     }
-
     .welcome{
         margin-bottom:11px;
     }
-
     .welcome h1{
         font-size:17px;
     }
-
     .welcome p{
         font-size:9px;
     }
-
     .metrics{
         gap:7px;
         margin-bottom:11px;
     }
-
     .metric{
         padding:10px;
     }
-
     .metric-value{
         font-size:18px;
     }
-
     .metric-icon{
         width:24px;
         height:24px;
         font-size:11px;
     }
-
     .quick-actions{
         gap:7px;
         margin-bottom:11px;
     }
-
     .action{
         padding:8px;
         gap:7px;
     }
-
     .action-icon{
         width:28px;
         height:28px;
         font-size:12px;
     }
-
     .section-head h2{
         font-size:11px;
     }
-
     .occupancy-card{
         padding:11px;
     }
-
     .chart-wrap{
         height:185px;
     }
 }
 
 @media(max-width:380px){
-
     .metrics{
         grid-template-columns:1fr 1fr;
     }
-
     .metric-label{
         font-size:8px;
     }
-
     .metric-value{
         font-size:17px;
     }
-
     .action-text strong{
         font-size:8px;
     }
-
     .action-text span{
         font-size:6px;
     }
@@ -704,7 +674,7 @@ body{
     </div>
 
     <nav class="nav">
-        <a href="index.html" class="active">
+        <a href="dashboard.html" class="active">
             <span class="nav-icon">⌂</span>
             <span>Dashboard</span>
         </a>
