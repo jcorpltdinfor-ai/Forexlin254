@@ -55,7 +55,7 @@
       display: flex;
       align-items: center;
       gap: 5px;
-      white-space: nowrap;
+      cursor: default;
     }
 
     /* ========================================================= FLOATING MENU BUTTON (TOP-LEFT) ========================================================= */
@@ -118,8 +118,7 @@
     .btn-secondary{ background:#f1f5f9; color:#334155; border:1px solid var(--border); } 
 
     /* ========================================================= STATS ========================================================= */ 
-    .stats{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-bottom:8px; width:100%; } 
-    @media(max-width:640px){ .stats{ grid-template-columns:1fr; } } 
+    .stats{ display:grid; grid-template-columns:1fr; gap:8px; margin-bottom:8px; width:100%; } 
     .stat{ background:var(--white); border:1px solid var(--border); border-radius:11px; padding:10px; width:100%; } 
     .stat-top{ display:flex; align-items:center; justify-content:space-between; gap:5px; } 
     .stat-label{ color:var(--muted); font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.3px; } 
@@ -291,7 +290,7 @@
 <body>
   <div class="app">
     <!-- ===================================================== FLOATING MENU BUTTON (TOP-LEFT) ====================================================== -->
-    <a href="index.html" class="floating-home-btn" title="Back to Dashboard">
+    <a href="dashboard.html" class="floating-home-btn" title="Back to Dashboard">
       <span></span>
       <span></span>
       <span></span>
@@ -323,25 +322,37 @@
           <div class="stat-icon" style="background:#dcfce7"> 💰 </div> 
         </div> 
         <div class="stat-value" id="statTotalCollected"> KES 0 </div> 
-        <div class="stat-note"> All-time logged </div> 
-      </div> 
-      <div class="stat"> 
-        <div class="stat-top"> 
-          <div class="stat-label"> M-Pesa </div> 
-          <div class="stat-icon" style="background:#e0f2fe"> 📱 </div> 
-        </div> 
-        <div class="stat-value" id="statMpesaCollected"> KES 0 </div> 
-        <div class="stat-note"> Mobile money </div> 
-      </div> 
-      <div class="stat"> 
-        <div class="stat-top"> 
-          <div class="stat-label"> Receipts </div> 
-          <div class="stat-icon" style="background:#fef3c7"> 🧾 </div> 
-        </div> 
-        <div class="stat-value" id="statCount"> 0 </div> 
-        <div class="stat-note"> Transactions </div> 
+        <div class="stat-note"> All-time logged revenue across all channels </div> 
       </div> 
     </section> 
+
+    <!-- ===================================================== MONTHLY PAYMENT METHODS BREAKDOWN ====================================================== -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title"> 📱 Payment Methods Breakdown by Month </div>
+          <div class="card-subtitle"> Monthly transaction totals for M-Pesa, Bank Transfer, Cash, and Cheque </div>
+        </div>
+      </div>
+      <div class="card-body" style="padding:10px;">
+        <div class="desktop-table-view">
+          <table>
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>📱 M-Pesa</th>
+                <th>🏦 Bank Transfer</th>
+                <th>💵 Cash</th>
+                <th>📄 Cheque</th>
+                <th>Total Collections</th>
+              </tr>
+            </thead>
+            <tbody id="paymentMethodsMonthlyBody"></tbody>
+          </table>
+        </div>
+        <div class="mobile-card-view" id="paymentMethodsMonthlyCards"></div>
+      </div>
+    </div>
 
     <!-- ===================================================== CONTENT GRID ====================================================== --> 
     <div class="main-grid">
@@ -601,16 +612,14 @@
       });
     });
 
-    // Collects active tenants dynamically from the shared database (populated by tenants.html)
     function populateHouseDropdown() {
-      loadDatabase(); // Ensure latest data from tenants.html is fetched
+      loadDatabase();
       const select = document.getElementById("houseTenantSelect");
       select.innerHTML = `<option value="">-- Choose Tenant / Occupied House --</option>`;
       
       database.houses.forEach(house => {
         const tenants = Array.isArray(house.tenants) ? house.tenants : [];
         tenants.forEach(tenant => {
-          // Check if tenant is active (or registered) based on tenants.html status
           const status = String(tenant.status || "").toLowerCase();
           if (status === "active" || status === "") {
             const opt = document.createElement("option");
@@ -943,19 +952,88 @@
       }).join("");
     }
 
+    function renderPaymentMethodMonthlyBreakdown() {
+      const all = getAllPayments();
+      const monthlyData = {};
+
+      all.forEach(p => {
+        if (!p.date) return;
+        const monthKey = p.date.slice(0, 7); // "YYYY-MM"
+        if (!monthlyData[monthKey]) {
+          monthlyData[monthKey] = { "M-Pesa": 0, "Bank Transfer": 0, "Cash": 0, "Cheque": 0, total: 0 };
+        }
+        const method = p.method || "Cash";
+        const amt = Number(p.amount) || 0;
+        if (monthlyData[monthKey][method] !== undefined) {
+          monthlyData[monthKey][method] += amt;
+        } else {
+          monthlyData[monthKey]["Cash"] += amt;
+        }
+        monthlyData[monthKey].total += amt;
+      });
+
+      const sortedMonths = Object.keys(monthlyData).sort().reverse();
+      const tableBody = document.getElementById("paymentMethodsMonthlyBody");
+      const mobileCards = document.getElementById("paymentMethodsMonthlyCards");
+
+      if (!sortedMonths.length) {
+        const emptyHtml = `
+          <div class="empty">
+            <div class="empty-icon"> 📊 </div>
+            <h3>No monthly transaction data found</h3>
+            <p>Logged payments will display here categorized by month and channel.</p>
+          </div>
+        `;
+        tableBody.innerHTML = `<tr><td colspan="6">${emptyHtml}</td></tr>`;
+        mobileCards.innerHTML = emptyHtml;
+        return;
+      }
+
+      tableBody.innerHTML = sortedMonths.map(mKey => {
+        const data = monthlyData[mKey];
+        const [y, m] = mKey.split("-");
+        const monthName = new Date(y, m - 1, 1).toLocaleDateString("en-GB", { month: "long", year: "numeric" });
+        return `
+          <tr>
+            <td><strong>${monthName}</strong></td>
+            <td style="color:#166534; font-weight:700;">KES ${money(data["M-Pesa"])}</td>
+            <td style="color:#075985; font-weight:700;">KES ${money(data["Bank Transfer"])}</td>
+            <td style="color:#92400e; font-weight:700;">KES ${money(data["Cash"])}</td>
+            <td>KES ${money(data["Cheque"])}</td>
+            <td class="money">KES ${money(data.total)}</td>
+          </tr>
+        `;
+      }).join("");
+
+      mobileCards.innerHTML = sortedMonths.map(mKey => {
+        const data = monthlyData[mKey];
+        const [y, m] = mKey.split("-");
+        const monthName = new Date(y, m - 1, 1).toLocaleDateString("en-GB", { month: "long", year: "numeric" });
+        return `
+          <div class="m-card">
+            <div class="m-card-top">
+              <span class="m-card-house">📅 ${monthName}</span>
+              <span class="m-card-amount">KES ${money(data.total)}</span>
+            </div>
+            <div class="m-card-grid">
+              <div><strong>M-Pesa:</strong> KES ${money(data["M-Pesa"])}</div>
+              <div><strong>Bank:</strong> KES ${money(data["Bank Transfer"])}</div>
+              <div><strong>Cash:</strong> KES ${money(data["Cash"])}</div>
+              <div><strong>Cheque:</strong> KES ${money(data["Cheque"])}</div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
     function renderStats() {
       const all = getAllPayments();
       let total = 0;
-      let mpesa = 0;
       all.forEach(p => {
-        const amt = Number(p.amount) || 0;
-        total += amt;
-        if (p.method === "M-Pesa") mpesa += amt;
+        total += Number(p.amount) || 0;
       });
 
       document.getElementById("statTotalCollected").textContent = `KES ${money(total)}`;
-      document.getElementById("statMpesaCollected").textContent = `KES ${money(mpesa)}`;
-      document.getElementById("statCount").textContent = all.length;
     }
 
     function exportLedgerCSV() {
@@ -980,6 +1058,7 @@
 
     function renderAll() {
       renderStats();
+      renderPaymentMethodMonthlyBreakdown();
       renderLedger();
     }
 
