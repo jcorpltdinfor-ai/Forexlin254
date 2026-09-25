@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0072CE">
+<title>AssetGuard Pro - Maintenance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+    --bg:#f4f7fb;
+    --card:#ffffff;
+    --line:#e6ebf2;
+    --text:#102033;
+    --muted:#6b7a8c;
+    --blue:#0072CE;
+    --blue-dark:#001A35;
+    --blue-light:#eaf5ff;
+    --orange:#ff6b00;
+    --green:#10a56a;
+    --red:#e5484d;
+    --sidebar:195px;
+    --radius:12px;
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html,body{
+    width:100%;
+    min-height:100%;
+}
+
+body{
+    font-family:"Plus Jakarta Sans",sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+.sidebar{
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+    width:var(--sidebar);
+    background:var(--blue-dark);
+    color:#fff;
+    z-index:1000;
+    display:flex;
+    flex-direction:column;
+    padding:14px 10px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    padding:3px 7px 16px;
+}
+
+.brand-logo{
+    width:31px;
+    height:31px;
+    border-radius:9px;
+    background:var(--blue);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:16px;
+    font-weight:800;
+    flex:none;
+}
+
+.brand-text{
+    line-height:1.05;
+}
+
+.brand-text strong{
+    display:block;
+    font-size:14px;
+    font-weight:800;
+}
+
+.brand-text span{
+    display:block;
+    margin-top:3px;
+    color:#8fa5bc;
+    font-size:8px;
+    letter-spacing:.7px;
+    text-transform:uppercase;
+}
+
+.nav{
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+}
+
+.nav a{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    min-height:35px;
+    padding:7px 9px;
+    color:#b9c7d6;
+    text-decoration:none;
+    border-radius:8px;
+    font-size:10px;
+    font-weight:600;
+    transition:.15s ease;
+}
+
+.nav a:hover{
+    background:rgba(255,255,255,.07);
+    color:#fff;
+}
+
+.nav a.active{
+    background:var(--blue);
+    color:#fff;
+}
+
+.nav-icon{
+    width:18px;
+    text-align:center;
+    font-size:14px;
+    flex:none;
+}
+
+.sidebar-bottom{
+    margin-top:auto;
+    border-top:1px solid rgba(255,255,255,.08);
+    padding-top:10px;
+}
+
+.sidebar-bottom a{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    padding:8px 9px;
+    border-radius:8px;
+    color:#9fb1c4;
+    text-decoration:none;
+    font-size:10px;
+    font-weight:600;
+}
+
+.sidebar-bottom a:hover{
+    color:#fff;
+    background:rgba(255,255,255,.06);
+}
+
+/* =========================
+   MAIN & TOPBAR
+========================= */
+.main{
+    margin-left:var(--sidebar);
+    min-height:100vh;
+}
+
+.topbar{
+    height:58px;
+    background:#fff;
+    border-bottom:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 22px 0 68px;
+    position:sticky;
+    top:0;
+    z-index:500;
+}
+
+/* FLOATING DASHBOARD LINK BUTTON */
+.menu-btn{
+    display:flex !important;
+    align-items:center;
+    justify-content:center;
+    position:fixed;
+    top:12px;
+    left:14px;
+    width:38px;
+    height:38px;
+    background:var(--blue-dark);
+    color:#ffffff;
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:10px;
+    text-decoration:none;
+    cursor:pointer;
+    font-size:16px;
+    z-index:1100;
+    box-shadow:0 4px 12px rgba(0,26,53,0.25);
+    transition:background .2s ease, transform .15s ease;
+}
+
+.menu-btn:hover{
+    background:var(--blue);
+    transform:scale(1.04);
+}
+
+.page-title{
+    font-size:16px;
+    font-weight:800;
+    color:var(--blue-dark);
+}
+
+.page-subtitle{
+    margin-top:2px;
+    font-size:9px;
+    color:var(--muted);
+}
+
+.top-right{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.notification{
+    width:32px;
+    height:32px;
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:7px;
+}
+
+.avatar{
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    background:var(--blue);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+    font-weight:800;
+}
+
+/* =========================
+   CONTENT & COMPONENTS
+========================= */
+.content{
+    padding:18px 22px 30px;
+    max-width:1500px;
+    margin:auto;
+}
+
+.metrics{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin-bottom:14px;
+}
+
+.metric{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:13px;
+}
+
+.metric-label{
+    font-size:9px;
+    color:var(--muted);
+    font-weight:600;
+}
+
+.metric-value{
+    margin-top:7px;
+    font-size:21px;
+    font-weight:800;
+    color:var(--blue-dark);
+}
+
+/* GRAPHS & ANALYTICS SECTION */
+.analytics-grid{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:14px;
+    margin-bottom:14px;
+}
+
+.card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px;
+    margin-bottom:14px;
+}
+
+.card-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:12px;
+}
+
+.card-title{
+    font-size:12px;
+    font-weight:800;
+    color:var(--blue-dark);
+}
+
+/* GRAPH BARS STYLING */
+.chart-container{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    padding:6px 0;
+}
+
+.chart-bar-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:10px;
+}
+
+.chart-label{
+    width:90px;
+    font-weight:700;
+    color:var(--muted);
+}
+
+.chart-bar-bg{
+    flex:1;
+    height:12px;
+    background:#edf2f7;
+    border-radius:99px;
+    overflow:hidden;
+}
+
+.chart-bar-fill{
+    height:100%;
+    border-radius:99px;
+    transition:width .4s ease;
+}
+
+.fill-pending{ background:var(--orange); }
+.fill-progress{ background:var(--blue); }
+.fill-resolved{ background:var(--green); }
+
+.chart-value{
+    width:30px;
+    text-align:right;
+    font-weight:800;
+}
+
+/* PRIORITY BREAKDOWN PILLS */
+.priority-stats{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    justify-content:center;
+    height:100%;
+}
+
+.p-pill{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:8px 12px;
+    background:#f8fafc;
+    border-radius:8px;
+    border:1px solid var(--line);
+    font-size:10px;
+    font-weight:700;
+}
+
+.btn-primary{
+    background:var(--blue);
+    color:#fff;
+    border:0;
+    border-radius:8px;
+    padding:7px 12px;
+    font-size:10px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:inherit;
+    transition:background .2s;
+}
+
+.btn-primary:hover{
+    background:#005bb5;
+}
+
+/* ACTION SELECT DROPDOWN */
+.action-select{
+    background:var(--blue-light);
+    color:var(--blue);
+    border:1px solid rgba(0,114,206,0.2);
+    border-radius:6px;
+    padding:4px 8px;
+    font-size:9px;
+    font-weight:700;
+    cursor:pointer;
+    outline:none;
+    font-family:inherit;
+}
+
+.action-select:hover{
+    background:#d8edff;
+}
+
+/* FORM CARD STYLES */
+.form-container{
+    display:none;
+    background:#f8fafc;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:14px;
+    margin-bottom:14px;
+}
+
+.form-container.show{
+    display:block;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:10px;
+    margin-bottom:10px;
+}
+
+.form-group label{
+    display:block;
+    font-size:9px;
+    font-weight:700;
+    color:var(--muted);
+    margin-bottom:4px;
+}
+
+.form-group input, .form-group select{
+    width:100%;
+    height:34px;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:0 10px;
+    font-size:10px;
+    font-family:inherit;
+    outline:none;
+    background:#fff;
+}
+
+.table-responsive{
+    width:100%;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:10px;
+    white-space:nowrap;
+}
+
+th, td{
+    padding:10px 12px;
+    text-align:left;
+    border-bottom:1px solid var(--line);
+}
+
+th{
+    background:#f8fafc;
+    font-weight:800;
+    color:var(--muted);
+    text-transform:uppercase;
+    font-size:8px;
+}
+
+.badge{
+    padding:3px 8px;
+    border-radius:99px;
+    font-size:8px;
+    font-weight:800;
+    display:inline-block;
+}
+
+.badge.pending{
+    background:#fff1e8;
+    color:var(--orange);
+}
+
+.badge.progress{
+    background:#eaf5ff;
+    color:var(--blue);
+}
+
+.badge.resolved{
+    background:#eafaf3;
+    color:var(--green);
+}
+
+/* =========================
+   MODERN PASSWORD PIN MODAL
+========================= */
+.modal-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.5);
+    z-index:2000;
+    align-items:center;
+    justify-content:center;
+    padding:15px;
+}
+
+.modal-overlay.show{
+    display:flex;
+}
+
+.modal-card{
+    background:#fff;
+    border-radius:14px;
+    padding:24px;
+    width:100%;
+    max-width:320px;
+    box-shadow:0 15px 35px rgba(0,0,0,0.2);
+    text-align:center;
+    animation:modalPop .2s ease;
+}
+
+@keyframes modalPop{
+    from{ transform:scale(0.95); opacity:0; }
+    to{ transform:scale(1); opacity:1; }
+}
+
+.modal-title{
+    font-size:14px;
+    font-weight:800;
+    color:var(--blue-dark);
+    margin-bottom:6px;
+}
+
+.modal-desc{
+    font-size:10px;
+    color:var(--muted);
+    margin-bottom:16px;
+}
+
+.modal-input{
+    width:100%;
+    height:40px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    text-align:center;
+    font-size:16px;
+    letter-spacing:4px;
+    font-weight:700;
+    margin-bottom:12px;
+    outline:none;
+    background:#fafbfc;
+}
+
+.modal-input:focus{
+    border-color:var(--blue);
+    background:#fff;
+}
+
+.modal-error{
+    color:var(--red);
+    font-size:9px;
+    margin-bottom:10px;
+    display:none;
+}
+
+.modal-actions{
+    display:flex;
+    gap:8px;
+}
+
+.modal-btn{
+    flex:1;
+    height:36px;
+    border-radius:8px;
+    font-size:10px;
+    font-weight:750;
+    cursor:pointer;
+    border:0;
+    font-family:inherit;
+}
+
+.modal-btn-cancel{
+    background:#edf2f7;
+    color:var(--muted);
+}
+
+.modal-btn-confirm{
+    background:var(--blue);
+    color:#fff;
+}
+
+/* =========================
+   MOBILE RESPONSIVENESS
+========================= */
+@media(max-width:700px){
+    .sidebar{
+        display:none;
+    }
+    .main{
+        margin-left:0;
+    }
+    .topbar{
+        padding:0 12px 0 58px;
+    }
+    .metrics{
+        grid-template-columns:1fr;
+    }
+    .analytics-grid{
+        grid-template-columns:1fr;
+    }
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- FLOATING DASHBOARD LINK BUTTON -->
+<a href="dashboard.html" class="menu-btn" title="Return to Dashboard">☰</a>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <div class="brand">
+        <div class="brand-logo">A</div>
+        <div class="brand-text">
+            <strong>AssetGuard</strong>
+            <span>Property Manager</span>
+        </div>
+    </div>
+
+    <nav class="nav">
+        <a href="dashboard.html">
+            <span class="nav-icon">⌂</span>
+            <span>Dashboard</span>
+        </a>
+        <a href="payments.html">
+            <span class="nav-icon">₿</span>
+            <span>Payments</span>
+        </a>
+        <a href="units.html">
+            <span class="nav-icon">▦</span>
+            <span>Units & Tenants</span>
+        </a>
+        <a href="tenants.html">
+            <span class="nav-icon">♙</span>
+            <span>Tenants Directory</span>
+        </a>
+        <a href="maintenance.html" class="active">
+            <span class="nav-icon">🔧</span>
+            <span>Maintenance</span>
+        </a>
+        <a href="utilities.html">
+            <span class="nav-icon">⚡</span>
+            <span>Utilities</span>
+        </a>
+        <a href="statements.html">
+            <span class="nav-icon">▤</span>
+            <span>Statements</span>
+        </a>
+        <a href="expenses.html">
+            <span class="nav-icon">▣</span>
+            <span>Expenses</span>
+        </a>
+        <a href="reports.html">
+            <span class="nav-icon">◒</span>
+            <span>Financial Reports</span>
+        </a>
+        <a href="property.html">
+            <span class="nav-icon">⌂</span>
+            <span>Property Profile</span>
+        </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+        <a href="settings.html">
+            <span class="nav-icon">⚙</span>
+            <span>Settings</span>
+        </a>
+        <a href="#" id="logoutBtn">
+            <span class="nav-icon">↪</span>
+            <span>Logout</span>
+        </a>
+    </div>
+</aside>
+
+<!-- MODERN PIN PASSWORD MODAL -->
+<div class="modal-overlay" id="pinModal">
+    <div class="modal-card">
+        <div class="modal-title">Security PIN Required</div>
+        <div class="modal-desc">Please enter PIN (1234) to authorize action.</div>
+        <input type="password" id="pinInput" class="modal-input" maxlength="4" placeholder="••••">
+        <div class="modal-error" id="pinError">Incorrect PIN. Try again.</div>
+        <div class="modal-actions">
+            <button class="modal-btn modal-btn-cancel" id="pinCancelBtn">Cancel</button>
+            <button class="modal-btn modal-btn-confirm" id="pinConfirmBtn">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+    <header class="topbar">
+        <div>
+            <div class="page-title">Maintenance</div>
+            <div class="page-subtitle">House repairs and service ticket tracking</div>
+        </div>
+        <div class="top-right">
+            <button class="notification" title="Notifications">🔔</button>
+            <div class="profile">
+                <div class="avatar">A</div>
+            </div>
+        </div>
+    </header>
+
+    <section class="content">
+        <!-- METRICS -->
+        <div class="metrics">
+            <div class="metric">
+                <div class="metric-label">Active Requests</div>
+                <div class="metric-value" id="metricActive">2</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">In Progress</div>
+                <div class="metric-value" id="metricProgress">1</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Resolved This Month</div>
+                <div class="metric-value" id="metricResolved">1</div>
+            </div>
+        </div>
+
+        <!-- MAINTENANCE GRAPHS & ANALYTICS -->
+        <div class="analytics-grid">
+            <div class="card" style="margin-bottom:0;">
+                <div class="card-header">
+                    <div class="card-title">Ticket Status Distribution</div>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-bar-row">
+                        <span class="chart-label">Pending</span>
+                        <div class="chart-bar-bg"><div class="chart-bar-fill fill-pending" id="barPending" style="width: 50%;"></div></div>
+                        <span class="chart-value" id="valPending">2</span>
+                    </div>
+                    <div class="chart-bar-row">
+                        <span class="chart-label">In Progress</span>
+                        <div class="chart-bar-bg"><div class="chart-bar-fill fill-progress" id="barProgress" style="width: 25%;"></div></div>
+                        <span class="chart-value" id="valProgress">1</span>
+                    </div>
+                    <div class="chart-bar-row">
+                        <span class="chart-label">Resolved</span>
+                        <div class="chart-bar-bg"><div class="chart-bar-fill fill-resolved" id="barResolved" style="width: 25%;"></div></div>
+                        <span class="chart-value" id="valResolved">1</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom:0;">
+                <div class="card-header">
+                    <div class="card-title">Priority Breakdowns</div>
+                </div>
+                <div class="priority-stats">
+                    <div class="p-pill"><span>High Priority</span><strong style="color:var(--red);" id="countHigh">1</strong></div>
+                    <div class="p-pill"><span>Medium Priority</span><strong style="color:var(--orange);" id="countMed">2</strong></div>
+                    <div class="p-pill"><span>Low Priority</span><strong style="color:var(--green);" id="countLow">1</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- REPAIR REQUEST FORM CARD -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">House Repair Tickets</div>
+                <button class="btn-primary" id="toggleFormBtn">+ New Request</button>
+            </div>
+
+            <!-- ADD / EDIT REQUEST FORM -->
+            <div class="form-container" id="formContainer">
+                <form id="repairForm">
+                    <input type="hidden" id="editIndex" value="">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>House / Unit</label>
+                            <input type="text" id="unitInput" placeholder="e.g. House 05" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Issue Description</label>
+                            <input type="text" id="descInput" placeholder="e.g. Leaking pipe" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Priority</label>
+                            <select id="priorityInput">
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary" id="saveFormBtn">Save Repair Request</button>
+                </form>
+            </div>
+
+            <!-- TABLE WITH ACTION DROPDOWN -->
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ticket ID</th>
+                            <th>House / Unit</th>
+                            <th>Issue Description</th>
+                            <th>Reported Date</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Action (PIN 1234)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="repairTableBody">
+                        <tr>
+                            <td><strong>#TICK-301</strong></td>
+                            <td>House 08</td>
+                            <td>Leaking kitchen sink faucet</td>
+                            <td>26 Sep 2026</td>
+                            <td>Medium</td>
+                            <td><span class="badge pending">Pending</span></td>
+                            <td>
+                                <select class="action-select" onchange="handleRowAction(this)">
+                                    <option value="" disabled selected>Actions...</option>
+                                    <option value="edit">Edit</option>
+                                    <option value="delete">Delete</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>#TICK-302</strong></td>
+                            <td>House 14</td>
+                            <td>Electrical socket spark in living room</td>
+                            <td>25 Sep 2026</td>
+                            <td>High</td>
+                            <td><span class="badge progress">In Progress</span></td>
+                            <td>
+                                <select class="action-select" onchange="handleRowAction(this)">
+                                    <option value="" disabled selected>Actions...</option>
+                                    <option value="edit">Edit</option>
+                                    <option value="delete">Delete</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>#TICK-298</strong></td>
+                            <td>House 03</td>
+                            <td>Main gate remote control replacement</td>
+                            <td>20 Sep 2026</td>
+                            <td>Low</td>
+                            <td><span class="badge resolved">Resolved</span></td>
+                            <td>
+                                <select class="action-select" onchange="handleRowAction(this)">
+                                    <option value="" disabled selected>Actions...</option>
+                                    <option value="edit">Edit</option>
+                                    <option value="delete">Delete</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>#TICK-299</strong></td>
+                            <td>House 11</td>
+                            <td>Water heater thermostat failure</td>
+                            <td>24 Sep 2026</td>
+                            <td>Medium</td>
+                            <td><span class="badge pending">Pending</span></td>
+                            <td>
+                                <select class="action-select" onchange="handleRowAction(this)">
+                                    <option value="" disabled selected>Actions...</option>
+                                    <option value="edit">Edit</option>
+                                    <option value="delete">Delete</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+/* MODERN PIN MODAL LOGIC */
+const pinModal = document.getElementById("pinModal");
+const pinInput = document.getElementById("pinInput");
+const pinError = document.getElementById("pinError");
+const pinConfirmBtn = document.getElementById("pinConfirmBtn");
+const pinCancelBtn = document.getElementById("pinCancelBtn");
+
+let pinResolveCallback = null;
+
+function promptPin(){
+    return new Promise((resolve) => {
+        pinInput.value = "";
+        pinError.style.display = "none";
+        pinModal.classList.add("show");
+        pinInput.focus();
+        pinResolveCallback = resolve;
+    });
+}
+
+pinConfirmBtn.addEventListener("click", () => {
+    if(pinInput.value === "1234"){
+        pinModal.classList.remove("show");
+        if(pinResolveCallback) pinResolveCallback(true);
+    } else {
+        pinError.style.display = "block";
+        pinInput.value = "";
+        pinInput.focus();
+    }
+});
+
+pinCancelBtn.addEventListener("click", () => {
+    pinModal.classList.remove("show");
+    if(pinResolveCallback) pinResolveCallback(false);
+});
+
+pinInput.addEventListener("keypress", (e) => {
+    if(e.key === "Enter") pinConfirmBtn.click();
+});
+
+/* UPDATE ANALYTICS & GRAPH VALUES */
+function updateAnalytics(){
+    const tbody = document.getElementById("repairTableBody");
+    const rows = tbody.rows;
+    
+    let pendingCount = 0;
+    let progressCount = 0;
+    let resolvedCount = 0;
+    let highCount = 0;
+    let medCount = 0;
+    let lowCount = 0;
+    
+    for(let i=0; i<rows.length; i++){
+        const statusBadge = rows[i].cells[5].innerText.trim();
+        const priority = rows[i].cells[4].innerText.trim();
+        
+        if(statusBadge.includes("Pending")) pendingCount++;
+        if(statusBadge.includes("In Progress")) progressCount++;
+        if(statusBadge.includes("Resolved")) resolvedCount++;
+        
+        if(priority === "High") highCount++;
+        if(priority === "Medium") medCount++;
+        if(priority === "Low") lowCount++;
+    }
+    
+    const total = rows.length || 1;
+    
+    // Update text metrics
+    document.getElementById("metricActive").innerText = pendingCount;
+    document.getElementById("metricProgress").innerText = progressCount;
+    document.getElementById("metricResolved").innerText = resolvedCount;
+    
+    // Update graph bars
+    document.getElementById("barPending").style.width = (pendingCount / total * 100) + "%";
+    document.getElementById("valPending").innerText = pendingCount;
+    
+    document.getElementById("barProgress").style.width = (progressCount / total * 100) + "%";
+    document.getElementById("valProgress").innerText = progressCount;
+    
+    document.getElementById("barResolved").style.width = (resolvedCount / total * 100) + "%";
+    document.getElementById("valResolved").innerText = resolvedCount;
+    
+    // Update priority counts
+    document.getElementById("countHigh").innerText = highCount;
+    document.getElementById("countMed").innerText = medCount;
+    document.getElementById("countLow").innerText = lowCount;
+}
+
+// Initial calculation call
+updateAnalytics();
+
+/* FORM TOGGLE */
+const toggleFormBtn = document.getElementById("toggleFormBtn");
+const formContainer = document.getElementById("formContainer");
+
+toggleFormBtn.addEventListener("click", () => {
+    formContainer.classList.toggle("show");
+    document.getElementById("repairForm").reset();
+    document.getElementById("editIndex").value = "";
+    document.getElementById("saveFormBtn").textContent = "Save Repair Request";
+});
+
+/* FORM SUBMISSION / SAVE HANDLER */
+document.getElementById("repairForm").addEventListener("submit", async function(e){
+    e.preventDefault();
+    const unit = document.getElementById("unitInput").value;
+    const desc = document.getElementById("descInput").value;
+    const priority = document.getElementById("priorityInput").value;
+    const editIndex = document.getElementById("editIndex").value;
+    const tbody = document.getElementById("repairTableBody");
+
+    const authorized = await promptPin();
+    if(!authorized) return;
+
+    if(editIndex !== ""){
+        const row = tbody.rows[editIndex];
+        row.cells[1].innerText = unit;
+        row.cells[2].innerText = desc;
+        row.cells[4].innerText = priority;
+        alert("Changes saved successfully!");
+        formContainer.classList.remove("show");
+        this.reset();
+        document.getElementById("editIndex").value = "";
+    } else {
+        const ticketId = "#TICK-" + Math.floor(310 + Math.random() * 90);
+        const dateStr = "26 Sep 2026";
+        
+        const newRow = tbody.insertRow(0);
+        newRow.innerHTML = `
+            <td><strong>${ticketId}</strong></td>
+            <td>${unit}</td>
+            <td>${desc}</td>
+            <td>${dateStr}</td>
+            <td>${priority}</td>
+            <td><span class="badge pending">Pending</span></td>
+            <td>
+                <select class="action-select" onchange="handleRowAction(this)">
+                    <option value="" disabled selected>Actions...</option>
+                    <option value="edit">Edit</option>
+                    <option value="delete">Delete</option>
+                </select>
+            </td>
+        `;
+        alert("Repair request added successfully!");
+        formContainer.classList.remove("show");
+        this.reset();
+    }
+    updateAnalytics();
+});
+
+/* HANDLE ROW ACTION DROPDOWN */
+async function handleRowAction(selectElem){
+    const action = selectElem.value;
+    selectElem.value = ""; // Reset dropdown
+    if(!action) return;
+
+    const row = selectElem.closest("tr");
+
+    if(action === "edit"){
+        const authorized = await promptPin();
+        if(!authorized) return;
+
+        document.getElementById("editIndex").value = row.rowIndex - 1;
+        document.getElementById("unitInput").value = row.cells[1].innerText;
+        document.getElementById("descInput").value = row.cells[2].innerText;
+        document.getElementById("priorityInput").value = row.cells[4].innerText;
+        document.getElementById("saveFormBtn").textContent = "Update Saved Changes";
+        
+        formContainer.classList.add("show");
+        window.scrollTo({top: 150, behavior: 'smooth'});
+    } 
+    else if(action === "delete"){
+        const authorized = await promptPin();
+        if(!authorized) return;
+
+        row.remove();
+        alert("Repair ticket deleted.");
+        updateAnalytics();
+    }
+}
+
+/* LOGOUT */
+document.getElementById("logoutBtn").addEventListener("click", function(e){
+    e.preventDefault();
+    sessionStorage.removeItem("ag_authenticated");
+    window.location.href = "index.html";
+});
+</script>
+</body>
+</html>
