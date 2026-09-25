@@ -1,11 +1,15 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0072CE">
-<title>AssetGuard Pro - Dashboard</title><link rel="preconnect" href="https://fonts.googleapis.com">
+<title>AssetGuard Pro - Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"><script src="https://cdn.jsdelivr.net/npm/chart.js"></script><style>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
 :root{
     --bg:#f4f7fb;
     --card:#ffffff;
@@ -166,7 +170,7 @@ body{
 }
 
 /* =========================
-   TOPBAR
+   TOPBAR & FLOATING MENU BUTTON
 ========================= */
 .topbar{
     height:58px;
@@ -175,28 +179,41 @@ body{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:0 22px;
+    padding:0 22px 0 68px;
     position:sticky;
     top:0;
     z-index:500;
+}
+
+.menu-btn{
+    display:flex !important;
+    align-items:center;
+    justify-content:center;
+    position:fixed;
+    top:11px;
+    left:14px;
+    width:36px;
+    height:36px;
+    background:var(--blue-dark);
+    color:#ffffff;
+    border:1px solid rgba(255,255,255,0.15);
+    border-radius:8px;
+    cursor:pointer;
+    font-size:18px;
+    z-index:1100;
+    box-shadow:0 2px 8px rgba(0,0,0,0.15);
+    transition:background .2s ease, transform .15s ease;
+}
+
+.menu-btn:hover{
+    background:var(--blue);
+    transform:scale(1.05);
 }
 
 .top-left{
     display:flex;
     align-items:center;
     gap:10px;
-}
-
-.menu-btn{
-    display:none;
-    border:0;
-    background:var(--blue-light);
-    color:var(--blue);
-    width:34px;
-    height:34px;
-    border-radius:8px;
-    cursor:pointer;
-    font-size:17px;
 }
 
 .page-title{
@@ -576,13 +593,7 @@ body{
 
     .topbar{
         height:54px;
-        padding:0 12px;
-    }
-
-    .menu-btn{
-        display:flex;
-        align-items:center;
-        justify-content:center;
+        padding:0 12px 0 58px;
     }
 
     .profile-text{
@@ -675,323 +686,247 @@ body{
         font-size:6px;
     }
 }
-</style></head><body><!-- SIDEBAR --><aside class="sidebar" id="sidebar"><div class="brand">
-    <div class="brand-logo">A</div>
-    <div class="brand-text">
-        <strong>AssetGuard</strong>
-        <span>Property Manager</span>
-    </div>
-</div>
+</style>
+</head>
+<body>
 
-<nav class="nav">
+<!-- FLOATING MENU BUTTON -->
+<button class="menu-btn" id="menuBtn" aria-label="Toggle menu">☰</button>
 
-    <a href="index.html" class="active">
-        <span class="nav-icon">⌂</span>
-        <span>Dashboard</span>
-    </a>
-
-    <a href="payments.html">
-        <span class="nav-icon">₿</span>
-        <span>Payments</span>
-    </a>
-
-    <a href="units.html">
-        <span class="nav-icon">▦</span>
-        <span>Units & Tenants</span>
-    </a>
-
-    <a href="tenants.html">
-        <span class="nav-icon">♙</span>
-        <span>Tenants Directory</span>
-    </a>
-
-    <a href="maintenance.html">
-        <span class="nav-icon">🔧</span>
-        <span>Maintenance</span>
-    </a>
-
-    <a href="utilities.html">
-        <span class="nav-icon">⚡</span>
-        <span>Utilities</span>
-    </a>
-
-    <a href="statements.html">
-        <span class="nav-icon">▤</span>
-        <span>Statements</span>
-    </a>
-
-    <a href="expenses.html">
-        <span class="nav-icon">▣</span>
-        <span>Expenses</span>
-    </a>
-
-    <a href="reports.html">
-        <span class="nav-icon">◒</span>
-        <span>Financial Reports</span>
-    </a>
-
-    <a href="property.html">
-        <span class="nav-icon">⌂</span>
-        <span>Property Profile</span>
-    </a>
-
-</nav>
-
-<div class="sidebar-bottom">
-
-    <a href="settings.html">
-        <span class="nav-icon">⚙</span>
-        <span>Settings</span>
-    </a>
-
-    <a href="#" id="logoutBtn">
-        <span class="nav-icon">↪</span>
-        <span>Logout</span>
-    </a>
-
-</div>
-
-</aside><div class="overlay" id="overlay"></div><!-- MAIN --><main class="main"><!-- TOPBAR -->
-<header class="topbar">
-
-    <div class="top-left">
-
-        <button class="menu-btn" id="menuBtn" aria-label="Open menu">
-            ☰
-        </button>
-
-        <div>
-            <div class="page-title">Dashboard</div>
-            <div class="page-subtitle">Property management overview</div>
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+    <div class="brand">
+        <div class="brand-logo">A</div>
+        <div class="brand-text">
+            <strong>AssetGuard</strong>
+            <span>Property Manager</span>
         </div>
-
     </div>
 
-    <div class="top-right">
-
-        <button class="notification" title="Notifications">
-            🔔
-        </button>
-
-        <div class="profile">
-            <div class="avatar">A</div>
-
-            <div class="profile-text">
-                <strong>Administrator</strong>
-                <span>Property Manager</span>
-            </div>
-        </div>
-
-    </div>
-
-</header>
-
-<!-- CONTENT -->
-<section class="content">
-
-    <div class="welcome">
-        <h1>Good morning</h1>
-        <p>Here is your property overview.</p>
-    </div>
-
-    <!-- METRICS -->
-    <div class="metrics">
-
-        <div class="metric">
-
-            <div class="metric-top">
-                <span class="metric-label">Total Units</span>
-                <div class="metric-icon">▦</div>
-            </div>
-
-            <div class="metric-value">42</div>
-
-            <div class="metric-note">
-                Registered units
-            </div>
-
-        </div>
-
-        <div class="metric">
-
-            <div class="metric-top">
-                <span class="metric-label">Occupied</span>
-                <div class="metric-icon">♙</div>
-            </div>
-
-            <div class="metric-value">38</div>
-
-            <div class="metric-note green">
-                90.5% occupancy
-            </div>
-
-        </div>
-
-        <div class="metric">
-
-            <div class="metric-top">
-                <span class="metric-label">Collected</span>
-                <div class="metric-icon">₿</div>
-            </div>
-
-            <div class="metric-value">KSh 285K</div>
-
-            <div class="metric-note green">
-                This month
-            </div>
-
-        </div>
-
-        <div class="metric">
-
-            <div class="metric-top">
-                <span class="metric-label">Arrears</span>
-                <div class="metric-icon">!</div>
-            </div>
-
-            <div class="metric-value">KSh 42K</div>
-
-            <div class="metric-note red">
-                Outstanding
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- QUICK ACTIONS -->
-    <div class="section-head">
-        <h2>Quick Actions</h2>
-        <span>Common tasks</span>
-    </div>
-
-    <div class="quick-actions">
-
-        <a href="payments.html" class="action">
-
-            <div class="action-icon">₿</div>
-
-            <div class="action-text">
-                <strong>Record Rent</strong>
-                <span>Record tenant payment</span>
-            </div>
-
+    <nav class="nav">
+        <a href="index.html" class="active">
+            <span class="nav-icon">⌂</span>
+            <span>Dashboard</span>
         </a>
-
-        <a href="payments.html" class="action orange">
-
-            <div class="action-icon">!</div>
-
-            <div class="action-text">
-                <strong>Apply Late Fee</strong>
-                <span>Update outstanding balance</span>
-            </div>
-
+        <a href="payments.html">
+            <span class="nav-icon">₿</span>
+            <span>Payments</span>
         </a>
-
-        <a href="maintenance.html" class="action green">
-
-            <div class="action-icon">🔧</div>
-
-            <div class="action-text">
-                <strong>Maintenance</strong>
-                <span>Record a repair request</span>
-            </div>
-
+        <a href="units.html">
+            <span class="nav-icon">▦</span>
+            <span>Units & Tenants</span>
         </a>
-
-        <a href="statements.html" class="action">
-
-            <div class="action-icon">▤</div>
-
-            <div class="action-text">
-                <strong>Statements</strong>
-                <span>View landlord statements</span>
-            </div>
-
+        <a href="tenants.html">
+            <span class="nav-icon">♙</span>
+            <span>Tenants Directory</span>
         </a>
+        <a href="maintenance.html">
+            <span class="nav-icon">🔧</span>
+            <span>Maintenance</span>
+        </a>
+        <a href="utilities.html">
+            <span class="nav-icon">⚡</span>
+            <span>Utilities</span>
+        </a>
+        <a href="statements.html">
+            <span class="nav-icon">▤</span>
+            <span>Statements</span>
+        </a>
+        <a href="expenses.html">
+            <span class="nav-icon">▣</span>
+            <span>Expenses</span>
+        </a>
+        <a href="reports.html">
+            <span class="nav-icon">◒</span>
+            <span>Financial Reports</span>
+        </a>
+        <a href="property.html">
+            <span class="nav-icon">⌂</span>
+            <span>Property Profile</span>
+        </a>
+    </nav>
 
+    <div class="sidebar-bottom">
+        <a href="settings.html">
+            <span class="nav-icon">⚙</span>
+            <span>Settings</span>
+        </a>
+        <a href="#" id="logoutBtn">
+            <span class="nav-icon">↪</span>
+            <span>Logout</span>
+        </a>
     </div>
+</aside>
 
-    <!-- OCCUPANCY -->
-    <div class="section-head">
-        <h2>Occupancy</h2>
-        <span>Current unit status</span>
-    </div>
+<div class="overlay" id="overlay"></div>
 
-    <div class="occupancy-card">
+<!-- MAIN -->
+<main class="main">
 
-        <div class="occupancy-layout">
+    <!-- TOPBAR -->
+    <header class="topbar">
+        <div class="top-left">
+            <div>
+                <div class="page-title">Dashboard</div>
+                <div class="page-subtitle">Property management overview</div>
+            </div>
+        </div>
 
-            <div class="chart-wrap">
-                <canvas id="occupancyChart"></canvas>
+        <div class="top-right">
+            <button class="notification" title="Notifications">🔔</button>
+            <div class="profile">
+                <div class="avatar">A</div>
+                <div class="profile-text">
+                    <strong>Administrator</strong>
+                    <span>Property Manager</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENT -->
+    <section class="content">
+        <div class="welcome">
+            <h1>Good morning</h1>
+            <p>Here is your property overview.</p>
+        </div>
+
+        <!-- METRICS -->
+        <div class="metrics">
+            <div class="metric">
+                <div class="metric-top">
+                    <span class="metric-label">Total Units</span>
+                    <div class="metric-icon">▦</div>
+                </div>
+                <div class="metric-value">42</div>
+                <div class="metric-note">Registered units</div>
             </div>
 
-            <div class="occupancy-summary">
+            <div class="metric">
+                <div class="metric-top">
+                    <span class="metric-label">Occupied</span>
+                    <div class="metric-icon">♙</div>
+                </div>
+                <div class="metric-value">38</div>
+                <div class="metric-note green">90.5% occupancy</div>
+            </div>
 
-                <div class="summary-number">90.5%</div>
+            <div class="metric">
+                <div class="metric-top">
+                    <span class="metric-label">Collected</span>
+                    <div class="metric-icon">₿</div>
+                </div>
+                <div class="metric-value">KSh 285K</div>
+                <div class="metric-note green">This month</div>
+            </div>
 
-                <div class="summary-label">
-                    Current occupancy rate
+            <div class="metric">
+                <div class="metric-top">
+                    <span class="metric-label">Arrears</span>
+                    <div class="metric-icon">!</div>
+                </div>
+                <div class="metric-value">KSh 42K</div>
+                <div class="metric-note red">Outstanding</div>
+            </div>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="section-head">
+            <h2>Quick Actions</h2>
+            <span>Common tasks</span>
+        </div>
+
+        <div class="quick-actions">
+            <a href="payments.html" class="action">
+                <div class="action-icon">₿</div>
+                <div class="action-text">
+                    <strong>Record Rent</strong>
+                    <span>Record tenant payment</span>
+                </div>
+            </a>
+
+            <a href="payments.html" class="action orange">
+                <div class="action-icon">!</div>
+                <div class="action-text">
+                    <strong>Apply Late Fee</strong>
+                    <span>Update outstanding balance</span>
+                </div>
+            </a>
+
+            <a href="maintenance.html" class="action green">
+                <div class="action-icon">🔧</div>
+                <div class="action-text">
+                    <strong>Maintenance</strong>
+                    <span>Record a repair request</span>
+                </div>
+            </a>
+
+            <a href="statements.html" class="action">
+                <div class="action-icon">▤</div>
+                <div class="action-text">
+                    <strong>Statements</strong>
+                    <span>View landlord statements</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- OCCUPANCY -->
+        <div class="section-head">
+            <h2>Occupancy</h2>
+            <span>Current unit status</span>
+        </div>
+
+        <div class="occupancy-card">
+            <div class="occupancy-layout">
+                <div class="chart-wrap">
+                    <canvas id="occupancyChart"></canvas>
                 </div>
 
-                <div class="legend">
+                <div class="occupancy-summary">
+                    <div class="summary-number">90.5%</div>
+                    <div class="summary-label">Current occupancy rate</div>
 
-                    <div class="legend-item">
-
-                        <div class="legend-left">
-                            <span class="dot occupied"></span>
-                            <span>Occupied</span>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-left">
+                                <span class="dot occupied"></span>
+                                <span>Occupied</span>
+                            </div>
+                            <strong>38</strong>
                         </div>
 
-                        <strong>38</strong>
-
-                    </div>
-
-                    <div class="legend-item">
-
-                        <div class="legend-left">
-                            <span class="dot vacant"></span>
-                            <span>Vacant</span>
+                        <div class="legend-item">
+                            <div class="legend-left">
+                                <span class="dot vacant"></span>
+                                <span>Vacant</span>
+                            </div>
+                            <strong>4</strong>
                         </div>
 
-                        <strong>4</strong>
-
-                    </div>
-
-                    <div class="legend-item">
-
-                        <div class="legend-left">
-                            <span>Units</span>
+                        <div class="legend-item">
+                            <div class="legend-left">
+                                <span>Units</span>
+                            </div>
+                            <strong>42</strong>
                         </div>
-
-                        <strong>42</strong>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
+    </section>
+</main>
 
-    </div>
-
-</section>
-
-</main><script>
-
+<script>
 /* =========================
-   MOBILE SIDEBAR
+   SIDEBAR TOGGLE LOGIC
 ========================= */
-
 const sidebar = document.getElementById("sidebar");
 const menuBtn = document.getElementById("menuBtn");
 const overlay = document.getElementById("overlay");
 
-function openSidebar(){
-    sidebar.classList.add("open");
-    overlay.classList.add("show");
+function toggleSidebar(){
+    sidebar.classList.toggle("open");
+    overlay.classList.toggle("show");
 }
 
 function closeSidebar(){
@@ -1000,7 +935,7 @@ function closeSidebar(){
 }
 
 if(menuBtn){
-    menuBtn.addEventListener("click", openSidebar);
+    menuBtn.addEventListener("click", toggleSidebar);
 }
 
 if(overlay){
@@ -1021,84 +956,54 @@ document.addEventListener("keydown", e => {
     }
 });
 
-
 /* =========================
    OCCUPANCY CHART
 ========================= */
-
 const chartCanvas = document.getElementById("occupancyChart");
 
 if(chartCanvas){
-
     new Chart(chartCanvas, {
-
-        type:"doughnut",
-
-        data:{
-            labels:["Occupied","Vacant"],
-
-            datasets:[{
-                data:[38,4],
-                backgroundColor:[
-                    "#0072CE",
-                    "#dce5ef"
-                ],
-                borderWidth:0,
-                hoverOffset:3
+        type: "doughnut",
+        data: {
+            labels: ["Occupied", "Vacant"],
+            datasets: [{
+                data: [38, 4],
+                backgroundColor: ["#0072CE", "#dce5ef"],
+                borderWidth: 0,
+                hoverOffset: 3
             }]
         },
-
-        options:{
-            responsive:true,
-            maintainAspectRatio:false,
-
-            cutout:"72%",
-
-            plugins:{
-                legend:{
-                    display:false
-                },
-
-                tooltip:{
-                    callbacks:{
-                        label:function(context){
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: "72%",
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context){
                             return " " + context.label + ": " + context.raw + " units";
                         }
                     }
                 }
             }
         }
-
     });
-
 }
-
 
 /* =========================
    LOGOUT
 ========================= */
-
 const logoutBtn = document.getElementById("logoutBtn");
 
 if(logoutBtn){
-
     logoutBtn.addEventListener("click", function(e){
-
         e.preventDefault();
-
-        try{
-            sessionStorage.removeItem("ag_authenticated");
-        }catch(err){}
-
-        try{
-            localStorage.removeItem("ag_session_active");
-        }catch(err){}
-
+        try{ sessionStorage.removeItem("ag_authenticated"); }catch(err){}
+        try{ localStorage.removeItem("ag_session_active"); }catch(err){}
         window.location.href = "index.html";
-
     });
-
 }
-
-</script></body>
+</script>
+</body>
 </html>
