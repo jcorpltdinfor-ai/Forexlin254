@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AssetGuard Pro | Complete Units & Tenants Intelligence</title>
+  <style>
+    *{ box-sizing:border-box; margin:0; padding:0; } 
+    :root{ 
+      --primary:#0284c7; 
+      --primary-dark:#075985; 
+      --primary-light:#e0f2fe; 
+      --success:#16a34a; 
+      --success-light:#dcfce7; 
+      --danger:#dc2626; 
+      --danger-light:#fee2e2; 
+      --warning:#d97706; 
+      --warning-light:#fef3c7; 
+      --dark:#0f172a; 
+      --muted:#64748b; 
+      --border:#e2e8f0; 
+      --bg:#f8fafc; 
+      --white:#fff; 
+    } 
+    html, body{ width:100%; min-height:100%; overflow-x:hidden; } 
+    body{ 
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; 
+      background:var(--bg); 
+      color:var(--dark); 
+      font-size:12px; 
+    } 
+    button, input, select{ font:inherit; } 
+    button{ cursor:pointer; } 
+    .app{ width:100%; max-width:1550px; margin:auto; padding:10px; overflow-x:hidden; } 
+
+    /* ========================================================= TOP NAVIGATION BAR ========================================================= */ 
+    .navbar {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 16px 10px 52px; 
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+      box-shadow: 0 3px 12px rgba(15,23,42,.03);
+      width: 100%;
+      min-height: 50px;
+    }
+    .nav-brand {
+      font-size: 14px;
+      font-weight: 850;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ========================================================= FLOATING MENU BUTTON (TOP-LEFT) ========================================================= */
+    .floating-home-btn {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      width: 38px;
+      height: 38px;
+      background: var(--dark);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.3);
+      z-index: 4000;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .floating-home-btn:hover {
+      transform: scale(1.06);
+      background: var(--primary-dark);
+    }
+    .floating-home-btn span {
+      display: block;
+      width: 16px;
+      height: 2px;
+      background: white;
+      border-radius: 1px;
+    }
+
+    /* ========================================================= HEADER ========================================================= */ 
+    .page-header{ 
+      background:var(--white); 
+      border:1px solid var(--border); 
+      border-radius:12px; 
+      padding:12px; 
+      display:flex; 
+      align-items:center; 
+      justify-content:space-between; 
+      gap:10px; 
+      margin-bottom:10px; 
+      width: 100%;
+    } 
+    .page-title h1{ font-size:15px; line-height:1.2; font-weight:850; } 
+    .page-title p{ color:var(--muted); font-size:9px; margin-top:2px; } 
+
+    .btn{ 
+      border:0; border-radius:8px; min-height:34px; padding:6px 12px; display:inline-flex; 
+      align-items:center; justify-content:center; gap:5px; font-size:10px; font-weight:750; transition:.18s ease; white-space:nowrap; 
+    } 
+    .btn:hover{ transform:translateY(-1px); } 
+    .btn-primary{ background:var(--primary); color:white; } 
+    .btn-primary:hover{ background:var(--primary-dark); } 
+    .btn-secondary{ background:#f1f5f9; color:#334155; border:1px solid var(--border); } 
+
+    /* ========================================================= STATS ========================================================= */ 
+    .stats{ display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:8px; margin-bottom:10px; width:100%; } 
+    @media(max-width:1100px){ .stats{ grid-template-columns:repeat(3, minmax(0, 1fr)); } }
+    @media(max-width:700px){ .stats{ grid-template-columns:repeat(2, minmax(0, 1fr)); } }
+
+    .stat{ background:var(--white); border:1px solid var(--border); border-radius:11px; padding:10px; width:100%; } 
+    .stat-top{ display:flex; align-items:center; justify-content:space-between; gap:5px; } 
+    .stat-label{ color:var(--muted); font-size:9px; font-weight:750; text-transform:uppercase; letter-spacing:.3px; } 
+    .stat-icon{ width:28px; height:28px; border-radius:8px; display:grid; place-items:center; font-size:12px; } 
+    .stat-value{ margin-top:6px; font-size:16px; line-height:1; font-weight:900; } 
+    .stat-note{ margin-top:4px; color:var(--muted); font-size:8px; } 
+
+    /* Analytics / Spreadsheet Visualizer Section */
+    .analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    @media(max-width: 900px){ .analytics-grid { grid-template-columns: 1fr; } }
+
+    .card{ 
+      background:var(--white); border:1px solid var(--border); border-radius:12px; overflow:hidden; 
+      box-shadow:0 3px 15px rgba(15,23,42,.03); margin-bottom:10px; width:100%; 
+    } 
+    .card-header{ padding:10px 14px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; } 
+    .card-title{ font-size:12px; font-weight:850; } 
+    .card-subtitle{ color:var(--muted); font-size:9px; margin-top:2px; } 
+    .card-body{ padding:12px; width:100%; } 
+
+    /* Visual Graph Bars */
+    .bar-chart-container { display: flex; flex-direction: column; gap: 8px; }
+    .bar-row { display: flex; align-items: center; gap: 8px; font-size: 10px; }
+    .bar-label { width: 90px; font-weight: 750; color: var(--muted); }
+    .bar-track { flex: 1; height: 10px; background: #e2e8f0; border-radius: 999px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 999px; transition: width 0.5s ease; }
+    .bar-value { width: 80px; text-align: right; font-weight: 800; }
+
+    /* Toolbar */
+    .toolbar{ display:flex; gap:6px; align-items:center; width:100%; flex-wrap:wrap; margin-bottom:10px; } 
+    .search{ flex:1; min-width:180px; position:relative; } 
+    .search input{ width:100%; height:34px; border:1px solid var(--border); border-radius:8px; padding:0 10px 0 28px; outline:none; background:#f8fafc; font-size:10px; } 
+    .search-icon{ position:absolute; left:8px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:10px; } 
+    .filter{ height:34px; border:1px solid var(--border); border-radius:8px; background:#f8fafc; padding:0 8px; outline:none; color:#334155; font-size:10px; font-weight:700; } 
+
+    /* Spreadsheet Table Styles */
+    .desktop-table-view { display: block; width: 100%; overflow-x: auto; }
+    table{ width:100%; min-width:1100px; border-collapse:collapse; } 
+    thead th{ 
+      background:#f8fafc; color:#475569; font-size:9px; text-transform:uppercase; letter-spacing:.35px; 
+      font-weight:850; padding:8px; border-bottom:1px solid var(--border); border-top:1px solid var(--border); text-align:left; white-space:nowrap; 
+    } 
+    tbody td{ padding:8px; border-bottom:1px solid #edf2f7; font-size:10px; vertical-align:middle; white-space:nowrap; } 
+    tbody tr:last-child td{ border-bottom:0; } 
+    tbody tr:hover{ background:#f8fbff; } 
+    .money{ font-weight:800; } 
+
+    .badge{ display:inline-flex; align-items:center; gap:3px; padding:3px 6px; border-radius:999px; font-size:8px; font-weight:800; } 
+    .badge-occupied{ background:var(--success-light); color:#166534; } 
+    .badge-vacant{ background:var(--danger-light); color:#991b1b; } 
+    .badge-paid{ background:var(--success-light); color:#166534; }
+    .badge-partial{ background:var(--warning-light); color:#92400e; }
+    .badge-unpaid{ background:var(--danger-light); color:#991b1b; }
+
+    .empty{ padding:30px 15px; text-align:center; } 
+    .empty-icon{ width:40px; height:40px; border-radius:10px; background:#f1f5f9; display:grid; place-items:center; margin:0 auto 6px; font-size:16px; } 
+
+    /* House Deep Dive Cards Grid (Alternative Detailed View) */
+    .house-deep-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 10px; margin-top: 10px; }
+    .house-detail-card { background: #fafafa; border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
+    .house-detail-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 6px; margin-bottom: 8px; }
+    .house-detail-body { font-size: 10px; display: grid; gap: 4px; color: #334155; }
+    .house-detail-row { display: flex; justify-content: space-between; }
+
+    /* Toast */ 
+    .toast{ 
+      position:fixed; right:12px; bottom:12px; z-index:3000; background:#0f172a; color:white; 
+      padding:9px 12px; border-radius:8px; box-shadow:0 10px 25px rgba(0,0,0,.2); font-size:10px; font-weight:750; 
+      opacity:0; transform:translateY(10px); pointer-events:none; transition:.2s; max-width:280px; 
+    } 
+    .toast.show{ opacity:1; transform:none; } 
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- ===================================================== FLOATING MENU BUTTON (TOP-LEFT) ====================================================== -->
+    <a href="dashboard.html" class="floating-home-btn" title="Back to Dashboard">
+      <span></span>
+      <span></span>
+      <span></span>
+    </a>
+
+    <!-- ===================================================== TOP NAVIGATION BAR ====================================================== -->
+    <nav class="navbar">
+      <div class="nav-brand"> 🏠 AssetGuard Pro — Master Property Intelligence </div>
+    </nav>
+
+    <!-- ===================================================== HEADER ====================================================== --> 
+    <header class="page-header"> 
+      <div class="page-title"> 
+        <h1>Comprehensive Units & Tenants Matrix</h1> 
+        <p>Complete historical, financial, and occupancy records for every property and resident</p> 
+      </div> 
+      <div class="header-actions"> 
+        <button class="btn btn-secondary" onclick="exportSpreadsheetCSV()"> 📥 Export Master Spreadsheet </button> 
+      </div> 
+    </header> 
+
+    <!-- ===================================================== STATS CARDS ====================================================== --> 
+    <section class="stats"> 
+      <div class="stat"> 
+        <div class="stat-top"> 
+          <div class="stat-label"> Total Units </div> 
+          <div class="stat-icon" style="background:#e0f2fe; color:var(--primary);"> 🏢 </div> 
+        </div> 
+        <div class="stat-value" id="statTotalUnits"> 0 </div> 
+        <div class="stat-note"> Registered properties </div> 
+      </div> 
+
+      <div class="stat"> 
+        <div class="stat-top"> 
+          <div class="stat-label"> Occupancy Rate </div> 
+          <div class="stat-icon" style="background:#dcfce7; color:var(--success);"> ✅ </div> 
+        </div> 
+        <div class="stat-value" id="statOccupancyRate"> 0% </div> 
+        <div class="stat-note" id="statOccupancyNote"> 0 of 0 occupied </div> 
+      </div> 
+
+      <div class="stat"> 
+        <div class="stat-top"> 
+          <div class="stat-label"> Expected Monthly </div> 
+          <div class="stat-icon" style="background:#fef3c7; color:var(--warning);"> 💰 </div> 
+        </div> 
+        <div class="stat-value" id="statExpectedRent"> KES 0 </div> 
+        <div class="stat-note"> Total potential rent </div> 
+      </div> 
+
+      <div class="stat"> 
+        <div class="stat-top"> 
+          <div class="stat-label"> Total Collected </div> 
+          <div class="stat-icon" style="background:#dcfce7; color:var(--success);"> 📈 </div> 
+        </div> 
+        <div class="stat-value" id="statTotalCollected"> KES 0 </div> 
+        <div class="stat-note"> Cumulative lifetime paid </div> 
+      </div> 
+
+      <div class="stat"> 
+        <div class="stat-top"> 
+          <div class="stat-label"> Total Deposits </div> 
+          <div class="stat-icon" style="background:#f1f5f9; color:var(--dark);"> 🛡️ </div> 
+        </div> 
+        <div class="stat-value" id="statTotalDeposits"> KES 0 </div> 
+        <div class="stat-note"> Held security bonds </div> 
+      </div> 
+    </section> 
+
+    <!-- ===================================================== ANALYTICS & VISUAL GRAPH SPREADSHEET SUMMARY ====================================================== -->
+    <div class="analytics-grid">
+      <!-- Occupancy Visual Breakdown -->
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-header">
+          <div>
+            <div class="card-title"> 📊 Portfolio Occupancy Graph </div>
+            <div class="card-subtitle"> Breakdown of occupied versus vacant rental units </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="bar-chart-container" id="occupancyGraphBars">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Methods Graph Breakdown -->
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-header">
+          <div>
+            <div class="card-title"> 💳 Revenue Distribution by Channel </div>
+            <div class="card-subtitle"> Total collections categorized across payment gateways </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="bar-chart-container" id="paymentChannelBars">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height: 10px;"></div>
+
+    <!-- ===================================================== MASTER SPREADSHEET TABLE ====================================================== -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title"> 📋 Master House & Tenant Spreadsheet Matrix </div>
+          <div class="card-subtitle" id="tableSubtitle"> Detailed record of every unit, resident, financial standing, and lease data </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="toolbar">
+          <div class="search">
+            <span class="search-icon"> 🔎 </span>
+            <input id="searchInput" type="search" placeholder="Search house number, tenant name, phone, ref..." oninput="renderMasterSpreadsheet()">
+          </div>
+          <select id="statusFilter" class="filter" onchange="renderMasterSpreadsheet()">
+            <option value="all"> All Units </option>
+            <option value="occupied"> Occupied Only </option>
+            <option value="vacant"> Vacant Only </option>
+          </select>
+        </div>
+
+        <!-- Spreadsheet Desktop View -->
+        <div class="desktop-table-view">
+          <table>
+            <thead>
+              <tr>
+                <th>House No.</th>
+                <th>Category / Type</th>
+                <th>Monthly Rent</th>
+                <th>Status</th>
+                <th>Tenant Name</th>
+                <th>Phone Number</th>
+                <th>Lease Start</th>
+                <th>Security Deposit</th>
+                <th>Total Payments Logged</th>
+                <th>Latest Transaction Date</th>
+              </tr>
+            </thead>
+            <tbody id="masterTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================== DETAILED HOUSE DOSSIER CARDS ====================================================== -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title"> 📂 Individual House Dossiers & Tenant Profiles </div>
+          <div class="card-subtitle"> In-depth card breakdown allowing quick viewing of complete background data per unit </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div id="houseDossierContainer" class="house-deep-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <!-- ===================================================== SCRIPT ====================================================== -->
+  <script>
+    const DB_KEY = "ag_rental_database";
+    let database = { houses: [] };
+
+    function loadDatabase() {
+      try {
+        const raw = localStorage.getItem(DB_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && Array.isArray(parsed.houses)) {
+            database = parsed;
+          }
+        }
+      } catch (e) {
+        console.error("Error loading database:", e);
+        database = { houses: [] };
+      }
+    }
+
+    function money(value) {
+      return (Number(value) || 0).toLocaleString("en-KE", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    }
+
+    function formatDate(value) {
+      if (!value) return "—";
+      const date = new Date(value + (String(value).length === 10 ? "T00:00:00" : ""));
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+    }
+
+    function toast(message) {
+      const el = document.getElementById("toast");
+      if (!el) return;
+      el.textContent = message;
+      el.classList.add("show");
+      clearTimeout(el.timer);
+      el.timer = setTimeout(() => el.classList.remove("show"), 3500);
+    }
+
+    function esc(val) {
+      return String(val ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    function getComprehensiveData() {
+      let records = [];
+      database.houses.forEach(house => {
+        const tenants = Array.isArray(house.tenants) ? house.tenants : [];
+        const activeTenant = tenants.find(t => String(t.status || "").toLowerCase() === "active" || !t.status) || tenants[0];
+
+        let totalPaid = 0;
+        let latestDate = null;
+        let depositHeld = 0;
+
+        tenants.forEach(t => {
+          if (t.deposit) depositHeld += Number(t.deposit) || 0;
+          const payments = Array.isArray(t.payments) ? t.payments : [];
+          payments.forEach(p => {
+            totalPaid += Number(p.amount) || 0;
+            const pDate = p.date || p.createdAt;
+            if (pDate && (!latestDate || new Date(pDate) > new Date(latestDate))) {
+              latestDate = pDate;
+            }
+          });
+        });
+
+        const isOccupied = !!activeTenant && (String(activeTenant.status || "active").toLowerCase() === "active");
+
+        records.push({
+          houseId: house.id,
+          houseNumber: house.houseNumber || "—",
+          houseType: house.type || "Standard",
+          unitRent: Number(house.monthlyRent) || 0,
+          isOccupied: isOccupied,
+          tenantName: activeTenant ? activeTenant.name : "Vacant Unit",
+          tenantPhone: activeTenant ? (activeTenant.phone || "—") : "—",
+          leaseStart: activeTenant ? (activeTenant.leaseStart || activeTenant.dateIn || "—") : "—",
+          depositHeld: depositHeld,
+          totalPaid: totalPaid,
+          latestPaymentDate: latestDate,
+          tenantsCount: tenants.length
+        });
+      });
+      return records;
+    }
+
+    function renderStatsAndGraphs() {
+      const records = getComprehensiveData();
+      const totalUnits = records.length;
+      let occupiedCount = 0;
+      let expectedRent = 0;
+      let grandTotalCollected = 0;
+      let grandTotalDeposits = 0;
+      let channelTotals = { "M-Pesa": 0, "Bank Transfer": 0, "Cash": 0, "Cheque": 0 };
+
+      database.houses.forEach(h => {
+        expectedRent += Number(h.monthlyRent) || 0;
+        (h.tenants || []).forEach(t => {
+          grandTotalDeposits += Number(t.deposit) || 0;
+          (t.payments || []).forEach(p => {
+            const amt = Number(p.amount) || 0;
+            grandTotalCollected += amt;
+            const m = p.method || "Cash";
+            if (channelTotals[m] !== undefined) {
+              channelTotals[m] += amt;
+            } else {
+              channelTotals["Cash"] += amt;
+            }
+          });
+        });
+      });
+
+      records.forEach(r => {
+        if (r.isOccupied) occupiedCount++;
+      });
+
+      const vacantCount = totalUnits - occupiedCount;
+      const occupancyRate = totalUnits > 0 ? Math.round((occupiedCount / totalUnits) * 100) : 0;
+
+      // Update Top Cards
+      document.getElementById("statTotalUnits").textContent = totalUnits;
+      document.getElementById("statOccupancyRate").textContent = `${occupancyRate}%`;
+      document.getElementById("statOccupancyNote").textContent = `${occupiedCount} occupied, ${vacantCount} vacant`;
+      document.getElementById("statExpectedRent").textContent = `KES ${money(expectedRent)}`;
+      document.getElementById("statTotalCollected").textContent = `KES ${money(grandTotalCollected)}`;
+      document.getElementById("statTotalDeposits").textContent = `KES ${money(grandTotalDeposits)}`;
+
+      // Render Occupancy Graph Bars
+      const occGraph = document.getElementById("occupancyGraphBars");
+      const occMax = Math.max(totalUnits, 1);
+      occGraph.innerHTML = `
+        <div class="bar-row">
+          <div class="bar-label">Occupied (${occupiedCount})</div>
+          <div class="bar-track"><div class="bar-fill" style="width: ${(occupiedCount/occMax)*100}%; background: var(--success);"></div></div>
+          <div class="bar-value">${Math.round((occupiedCount/occMax)*100)}%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Vacant (${vacantCount})</div>
+          <div class="bar-track"><div class="bar-fill" style="width: ${(vacantCount/occMax)*100}%; background: var(--danger);"></div></div>
+          <div class="bar-value">${Math.round((vacantCount/occMax)*100)}%</div>
+        </div>
+      `;
+
+      // Render Payment Channel Graph Bars
+      const chanGraph = document.getElementById("paymentChannelBars");
+      const maxChanVal = Math.max(...Object.values(channelTotals), 1);
+      chanGraph.innerHTML = Object.entries(channelTotals).map(([chan, val]) => `
+        <div class="bar-row">
+          <div class="bar-label">${chan}</div>
+          <div class="bar-track"><div class="bar-fill" style="width: ${(val/maxChanVal)*100}%; background: var(--primary);"></div></div>
+          <div class="bar-value">KES ${money(val)}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderMasterSpreadsheet() {
+      loadDatabase();
+      const search = document.getElementById("searchInput").value.trim().toLowerCase();
+      const statusFilter = document.getElementById("statusFilter").value;
+      const records = getComprehensiveData();
+
+      const filtered = records.filter(r => {
+        const haystack = [r.houseNumber, r.houseType, r.tenantName, r.tenantPhone].join(" ").toLowerCase();
+        if (search && !haystack.includes(search)) return false;
+        if (statusFilter === "occupied" && !r.isOccupied) return false;
+        if (statusFilter === "vacant" && r.isOccupied) return false;
+        return true;
+      });
+
+      document.getElementById("tableSubtitle").textContent = `${filtered.length} property record(s) matching filter criteria`;
+
+      const tableBody = document.getElementById("masterTableBody");
+      const dossierContainer = document.getElementById("houseDossierContainer");
+
+      if (!filtered.length) {
+        const emptyHtml = `
+          <div class="empty">
+            <div class="empty-icon"> 🏢 </div>
+            <h3>No property records found</h3>
+            <p>Try modifying your search or filter requirements.</p>
+          </div>
+        `;
+        tableBody.innerHTML = `<tr><td colspan="10">${emptyHtml}</td></tr>`;
+        dossierContainer.innerHTML = emptyHtml;
+        return;
+      }
+
+      // Render Spreadsheet Rows
+      tableBody.innerHTML = filtered.map(r => {
+        const badgeClass = r.isOccupied ? "badge-occupied" : "badge-vacant";
+        const badgeText = r.isOccupied ? "Occupied" : "Vacant";
+
+        return `
+          <tr>
+            <td><strong>House ${esc(r.houseNumber)}</strong></td>
+            <td>${esc(r.houseType)}</td>
+            <td class="money">KES ${money(r.unitRent)}</td>
+            <td><span class="badge ${badgeClass}">${badgeText}</span></td>
+            <td>${esc(r.tenantName)}</td>
+            <td>${esc(r.tenantPhone)}</td>
+            <td>${formatDate(r.leaseStart)}</td>
+            <td class="money">KES ${money(r.depositHeld)}</td>
+            <td class="money" style="color:var(--success);">KES ${money(r.totalPaid)}</td>
+            <td>${formatDate(r.latestPaymentDate)}</td>
+          </tr>
+        `;
+      }).join("");
+
+      // Render Detailed Dossier Cards
+      dossierContainer.innerHTML = filtered.map(r => {
+        const badgeClass = r.isOccupied ? "badge-occupied" : "badge-vacant";
+        const badgeText = r.isOccupied ? "Occupied" : "Vacant";
+
+        return `
+          <div class="house-detail-card">
+            <div class="house-detail-header">
+              <span style="font-weight:900; font-size:12px;">🏠 House ${esc(r.houseNumber)} (${esc(r.houseType)})</span>
+              <span class="badge ${badgeClass}">${badgeText}</span>
+            </div>
+            <div class="house-detail-body">
+              <div class="house-detail-row"><span>Unit Monthly Rent:</span> <strong style="color:var(--primary);">KES ${money(r.unitRent)}</strong></div>
+              <div class="house-detail-row"><span>Resident Tenant:</span> <strong>${esc(r.tenantName)}</strong></div>
+              <div class="house-detail-row"><span>Contact Phone:</span> <span>${esc(r.tenantPhone)}</span></div>
+              <div class="house-detail-row"><span>Lease Commencement:</span> <span>${formatDate(r.leaseStart)}</span></div>
+              <div class="house-detail-row"><span>Security Bond Held:</span> <span>KES ${money(r.depositHeld)}</span></div>
+              <div class="house-detail-row"><span>Total Revenue Collected:</span> <strong style="color:var(--success);">KES ${money(r.totalPaid)}</strong></div>
+              <div class="house-detail-row"><span>Last Payment Received:</span> <span>${formatDate(r.latestPaymentDate)}</span></div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function exportSpreadsheetCSV() {
+      const records = getComprehensiveData();
+      if (!records.length) {
+        toast("No records available to export.");
+        return;
+      }
+      let csv = "House Number,House Type,Monthly Rent (KES),Occupancy Status,Tenant Name,Phone Number,Lease Start,Deposit Held (KES),Total Paid (KES),Latest Payment Date\n";
+      records.forEach(r => {
+        csv += `"${r.houseNumber}","${r.houseType}","${r.unitRent}","${r.isOccupied ? 'Occupied' : 'Vacant'}","${r.tenantName}","${r.tenantPhone}","${r.leaseStart}","${r.depositHeld}","${r.totalPaid}","${r.latestPaymentDate || ''}"\n`;
+      });
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `master_units_tenants_spreadsheet_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast("Master spreadsheet successfully exported!");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadDatabase();
+      renderStatsAndGraphs();
+      renderMasterSpreadsheet();
+    });
+  </script>
+</body>
+</html>
