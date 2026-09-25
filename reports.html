@@ -8,38 +8,411 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- Chart.js CDN for interactive Pie / Bar charts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-:root{--bg:#f4f7fb;--card:#ffffff;--line:#e6ebf2;--text:#102033;--muted:#6b7a8c;--blue:#0072CE;--blue-dark:#001A35;--blue-light:#eaf5ff;--orange:#ff6b00;--green:#10a56a;--red:#e5484d;--sidebar:195px;--radius:12px;}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
-.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar);background:var(--blue-dark);color:#fff;z-index:1000;display:flex;flex-direction:column;padding:14px 10px;}
-.brand{display:flex;align-items:center;gap:9px;padding:3px 7px 16px;}
-.brand-logo{width:31px;height:31px;border-radius:9px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;flex:none;}
-.brand-text strong{display:block;font-size:14px;font-weight:800;}
-.brand-text span{display:block;margin-top:3px;color:#8fa5bc;font-size:8px;letter-spacing:.7px;text-transform:uppercase;}
-.nav{display:flex;flex-direction:column;gap:3px;}
-.nav a{display:flex;align-items:center;gap:9px;min-height:35px;padding:7px 9px;color:#b9c7d6;text-decoration:none;border-radius:8px;font-size:10px;font-weight:600;}
-.nav a:hover{background:rgba(255,255,255,.07);color:#fff;}
-.nav a.active{background:var(--blue);color:#fff;}
-.nav-icon{width:18px;text-align:center;font-size:14px;flex:none;}
-.sidebar-bottom{margin-top:auto;border-top:1px solid rgba(255,255,255,.08);padding-top:10px;}
-.sidebar-bottom a{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:8px;color:#9fb1c4;text-decoration:none;font-size:10px;font-weight:600;}
-.main{margin-left:var(--sidebar);min-height:100vh;}
-.topbar{height:58px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 22px 0 68px;position:sticky;top:0;z-index:500;}
-.menu-btn{display:flex!important;align-items:center;justify-content:center;position:fixed;top:12px;left:14px;width:38px;height:38px;background:var(--blue-dark);color:#ffffff;border:1px solid rgba(255,255,255,0.2);border-radius:10px;text-decoration:none;cursor:pointer;font-size:16px;z-index:1100;box-shadow:0 4px 12px rgba(0,26,53,0.25);}
-.page-title{font-size:16px;font-weight:800;color:var(--blue-dark);}
-.page-subtitle{margin-top:2px;font-size:9px;color:var(--muted);}
-.content{padding:18px 22px 30px;max-width:1500px;margin:auto;}
-.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
-.metric{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:13px;}
-.metric-label{font-size:9px;color:var(--muted);font-weight:600;}
-.metric-value{margin-top:7px;font-size:21px;font-weight:800;color:var(--blue-dark);}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:14px;}
-.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
-.card-title{font-size:12px;font-weight:800;color:var(--blue-dark);}
-.btn-primary{background:var(--blue);color:#fff;border:0;border-radius:8px;padding:7px 12px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;}
-@media(max-width:700px){.sidebar{display:none;}.main{margin-left:0;}.topbar{padding:0 12px 0 58px;}.metrics{grid-template-columns:1fr;}}
+:root {
+    --primary: #0072CE;
+    --blue: #0072CE;
+    --orange: #ff6b00;
+    --green: #10a56a;
+    --red: #e5484d;
+    --sidebar-width: 225px;
+    --radius: 12px;
+}
+
+/* Light Theme (Default) */
+html[data-theme="light"], html:not([data-theme]) {
+    --bg: #f4f7fb;
+    --card: #ffffff;
+    --line: #e6ebf2;
+    --text: #102033;
+    --muted: #6b7a8c;
+    --blue-dark: #001A35;
+    --blue-light: #eaf5ff;
+    --card-header-bg: #f8fafc;
+    --table-hover: #f8fbff;
+    --input-bg: #ffffff;
+    --shadow: 0 4px 20px rgba(15,23,42,.04);
+}
+
+/* Dark Theme */
+html[data-theme="dark"] {
+    --bg: #090d16;
+    --card: #131b2e;
+    --line: #1e293b;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --blue-dark: #0b111e;
+    --blue-light: #182238;
+    --card-header-bg: #182238;
+    --table-hover: #1a253f;
+    --input-bg: #0b111e;
+    --shadow: 0 4px 20px rgba(0,0,0,.3);
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html,body{
+    width:100%;
+    min-height:100%;
+    overflow-x: hidden;
+}
+
+body{
+    font-family:"Plus Jakarta Sans",sans-serif;
+    font-size: 12px;
+    background:var(--bg);
+    color:var(--text);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* SIDEBAR */
+.sidebar{
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+    width:var(--sidebar-width);
+    background:var(--blue-dark);
+    color:#fff;
+    z-index:1000;
+    display:flex;
+    flex-direction:column;
+    padding:16px 12px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:4px 7px 18px;
+}
+
+.brand-logo{
+    width:33px;
+    height:33px;
+    border-radius:9px;
+    background:var(--blue);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:16px;
+    font-weight:800;
+    flex:none;
+}
+
+.brand-text strong{
+    display:block;
+    font-size:14px;
+    font-weight:800;
+}
+
+.brand-text span{
+    display:block;
+    margin-top:2px;
+    color:#8fa5bc;
+    font-size:10px;
+    letter-spacing:.8px;
+    text-transform:uppercase;
+}
+
+.nav{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.nav a{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-height:36px;
+    padding:8px 10px;
+    color:#b9c7d6;
+    text-decoration:none;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.nav a:hover{
+    background:rgba(255,255,255,.07);
+    color:#fff;
+}
+
+.nav a.active{
+    background:var(--blue);
+    color:#fff;
+}
+
+.nav-icon{
+    width:18px;
+    text-align:center;
+    font-size:14px;
+    flex:none;
+}
+
+.sidebar-bottom{
+    margin-top:auto;
+    border-top:1px solid rgba(255,255,255,.08);
+    padding-top:10px;
+}
+
+.sidebar-bottom a{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:9px 10px;
+    border-radius:8px;
+    color:#9fb1c4;
+    text-decoration:none;
+    font-size:12px;
+    font-weight:600;
+}
+
+/* MAIN & TOPBAR */
+.main{
+    margin-left:var(--sidebar-width);
+    min-height:100vh;
+}
+
+.topbar{
+    height:60px;
+    background:var(--card);
+    border-bottom:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 20px 0 68px;
+    position:sticky;
+    top:0;
+    z-index:500;
+}
+
+.menu-btn{
+    display:flex !important;
+    align-items:center;
+    justify-content:center;
+    position:fixed;
+    top:13px;
+    left:14px;
+    width:38px;
+    height:38px;
+    background:var(--blue-dark);
+    color:#ffffff;
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:9px;
+    text-decoration:none;
+    cursor:pointer;
+    font-size:16px;
+    z-index:1100;
+    box-shadow:0 4px 12px rgba(0,26,53,0.25);
+}
+
+.page-title{
+    font-size:15px;
+    font-weight:800;
+    color:var(--text);
+}
+
+.page-subtitle{
+    margin-top:2px;
+    font-size:10px;
+    color:var(--muted);
+}
+
+.top-right{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.notification{
+    width:34px;
+    height:34px;
+    border:1px solid var(--line);
+    background:var(--card);
+    color:var(--text);
+    border-radius:9px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.profile .avatar{
+    width:33px;
+    height:33px;
+    border-radius:50%;
+    background:var(--blue);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    font-weight:800;
+}
+
+/* CONTENT */
+.content{
+    padding:16px;
+    max-width:1400px;
+    margin:auto;
+}
+
+/* CONTROLS BAR */
+.filter-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.btn-primary, .btn-secondary {
+    border-radius: 7px;
+    padding: 0 14px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: 0;
+}
+
+.btn-primary { background: var(--blue); color: #fff; }
+.btn-primary:hover { background: #005bb5; }
+.btn-secondary { background: var(--card-header-bg); color: var(--text); border: 1px solid var(--line); }
+.btn-secondary:hover { background: var(--line); }
+
+/* METRICS */
+.metrics{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin-bottom:14px;
+}
+
+.metric{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:14px;
+    box-shadow: var(--shadow);
+}
+
+.metric-label{
+    font-size:11px;
+    color:var(--muted);
+    font-weight:600;
+}
+
+.metric-value{
+    margin-top:6px;
+    font-size:20px;
+    font-weight:800;
+    color:var(--text);
+}
+
+/* CARD & TABLES */
+.card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px;
+    margin-bottom:14px;
+    box-shadow: var(--shadow);
+}
+
+.card-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:12px;
+}
+
+.card-title{
+    font-size:13px;
+    font-weight:800;
+    color:var(--text);
+}
+
+.table-responsive{
+    width:100%;
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:12px;
+    white-space:nowrap;
+}
+
+th, td{
+    padding:10px 12px;
+    text-align:left;
+    border-bottom:1px solid var(--line);
+}
+
+th{
+    background:var(--card-header-bg);
+    font-weight:800;
+    color:var(--muted);
+    text-transform:uppercase;
+    font-size:10px;
+    letter-spacing: .5px;
+}
+
+td { color: var(--text); }
+tbody tr:hover { background: var(--table-hover); }
+
+.badge{
+    padding:3px 8px;
+    border-radius:99px;
+    font-size:10px;
+    font-weight:800;
+    display:inline-block;
+}
+.badge.success { background:#eafaf3; color:var(--green); }
+.badge.warning { background:#fff1e8; color:var(--orange); }
+
+/* MOBILE RESPONSIVENESS */
+@media(max-width:900px){
+    .sidebar{ display:none; }
+    .main{ margin-left:0; }
+    .topbar{ padding:0 14px 0 60px; }
+    .metrics{ grid-template-columns:repeat(2, 1fr); }
+}
+
+@media(max-width:550px){
+    .metrics{ grid-template-columns:1fr; }
+    .filter-card { flex-direction: column; align-items: stretch; }
+    .btn-primary, .btn-secondary { width: 100%; }
+}
 </style>
+<script>
+  (function() {
+    const savedTheme = localStorage.getItem("theme") || localStorage.getItem("ag_theme") || "light";
+    document.documentElement.setAttribute("data-theme", savedTheme);
+  })();
+</script>
 </head>
 <body>
 
@@ -48,7 +421,10 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
 <aside class="sidebar">
     <div class="brand">
         <div class="brand-logo">A</div>
-        <div class="brand-text"><strong>AssetGuard</strong><span>Property Manager</span></div>
+        <div class="brand-text">
+            <strong>AssetGuard</strong>
+            <span>Property Manager</span>
+        </div>
     </div>
     <nav class="nav">
         <a href="dashboard.html"><span class="nav-icon">⌂</span><span>Dashboard</span></a>
@@ -64,7 +440,7 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
     </nav>
     <div class="sidebar-bottom">
         <a href="settings.html"><span class="nav-icon">⚙</span><span>Settings</span></a>
-        <a href="index.html"><span class="nav-icon">↪</span><span>Logout</span></a>
+        <a href="#" id="logoutBtn"><span class="nav-icon">↪</span><span>Logout</span></a>
     </div>
 </aside>
 
@@ -72,25 +448,254 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
     <header class="topbar">
         <div>
             <div class="page-title">Financial Reports</div>
-            <div class="page-subtitle">Income statements and property performance metrics</div>
+            <div class="page-subtitle">Live database summary & analytics</div>
+        </div>
+        <div class="top-right">
+            <button class="notification" title="Notifications">🔔</button>
+            <div class="profile"><div class="avatar">A</div></div>
         </div>
     </header>
 
     <section class="content">
-        <div class="metrics">
-            <div class="metric"><div class="metric-label">Gross Revenue (Sept)</div><div class="metric-value">$12,450</div></div>
-            <div class="metric"><div class="metric-label">Total Expenses</div><div class="metric-value">$1,450</div></div>
-            <div class="metric"><div class="metric-label">Net Profit</div><div class="metric-value" style="color:var(--green);">$11,000</div></div>
+        <!-- ACTION BAR -->
+        <div class="filter-card">
+            <span style="font-weight: 700; color: var(--muted);" id="dbRecordCount">Syncing records...</span>
+            <div style="display:flex; gap:8px;">
+                <button class="btn-primary" id="refreshBtn">🔄 Refresh Data</button>
+                <button class="btn-secondary" onclick="window.print()">🖨️ Print Report</button>
+            </div>
         </div>
 
+        <!-- KEY METRICS -->
+        <div class="metrics">
+            <div class="metric">
+                <div class="metric-label">Total Revenue</div>
+                <div class="metric-value" id="repRevenue">$0.00</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Operating Expenses</div>
+                <div class="metric-value" id="repExpenses">$0.00</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Net Operating Income</div>
+                <div class="metric-value" id="repNOI">$0.00</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Collection Rate</div>
+                <div class="metric-value" id="repCollection">0.0%</div>
+            </div>
+        </div>
+
+        <!-- FINANCIAL VISUALIZATION (PIE & HISTOGRAM / BAR CHART) -->
         <div class="card">
             <div class="card-header">
-                <div class="card-title">Generate Report Summary</div>
-                <button class="btn-primary">Download PDF Statement</button>
+                <div class="card-title">Financial Breakdown & Analytics</div>
+                <button class="btn-secondary" id="toggleChartType" style="height:30px; font-size:11px; padding:0 12px;">Switch to Bar Chart</button>
             </div>
-            <p style="font-size:11px;color:var(--muted);">All records conform to standard real estate accounting standards. Select date ranges or individual unit statements via the sidebar navigation links.</p>
+            <div style="position: relative; height: 260px; width: 100%;">
+                <canvas id="financialChart"></canvas>
+            </div>
+        </div>
+
+        <!-- CLEAN UNIT & FINANCIAL LEDGER -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Live Portfolio Summary</div>
+                <span class="badge success">Synced Database</span>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Unit / Property</th>
+                            <th>Tenant</th>
+                            <th>Rent Amount</th>
+                            <th>Payment Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportTableBody">
+                        <tr><td colspan="4" style="text-align:center; color:var(--muted);">No records found in database.</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </section>
 </main>
+
+<script>
+let financialChartInstance = null;
+let currentChartType = 'doughnut'; // 'doughnut' (pie-like) or 'bar' (histogram style)
+
+function initChart(revenue, expenses, netIncome) {
+    const ctx = document.getElementById('financialChart').getContext('2d');
+    
+    if (financialChartInstance) {
+        financialChartInstance.destroy();
+    }
+
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const textColor = isDark ? '#f8fafc' : '#102033';
+    const gridColor = isDark ? '#1e293b' : '#e6ebf2';
+
+    if (currentChartType === 'doughnut') {
+        financialChartInstance = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Operating Expenses', 'Net Operating Income'],
+                datasets: [{
+                    data: [expenses, netIncome],
+                    backgroundColor: ['#e5484d', '#10a56a'],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: textColor,
+                            font: { family: 'Plus Jakarta Sans', size: 11, weight: '600' }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) { label += ': '; }
+                                label += '$' + context.raw.toLocaleString(undefined, {minimumFractionDigits: 2});
+                                return label;
+                            }
+                        }
+                    }
+                },
+                cutout: '70%'
+            }
+        });
+    } else {
+        financialChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Total Revenue', 'Operating Expenses', 'Net Operating Income'],
+                datasets: [{
+                    label: 'Amount ($)',
+                    data: [revenue, expenses, netIncome],
+                    backgroundColor: ['#0072CE', '#e5484d', '#10a56a'],
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: textColor, font: { family: 'Plus Jakarta Sans', size: 11 } }
+                    },
+                    y: {
+                        grid: { color: gridColor },
+                        ticks: { 
+                            color: textColor, 
+                            font: { family: 'Plus Jakarta Sans', size: 11 },
+                            callback: function(value) { return '$' + value.toLocaleString(); }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return ' $' + context.raw.toLocaleString(undefined, {minimumFractionDigits: 2});
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+}
+
+document.getElementById('toggleChartType').addEventListener('click', () => {
+    currentChartType = currentChartType === 'doughnut' ? 'bar' : 'doughnut';
+    document.getElementById('toggleChartType').innerText = currentChartType === 'doughnut' ? 'Switch to Bar Chart' : 'Switch to Pie Chart';
+    renderLiveReports();
+});
+
+function renderLiveReports() {
+    // Read directly from database storage without injecting hardcoded mock items
+    const units = JSON.parse(localStorage.getItem("ag_units")) || [];
+    const expenses = JSON.parse(localStorage.getItem("ag_expenses")) || [];
+    const payments = JSON.parse(localStorage.getItem("ag_payments")) || [];
+
+    let totalRevenue = 0;
+    let paidCount = 0;
+
+    units.forEach(u => {
+        totalRevenue += parseFloat(u.rent) || 0;
+        if (u.paymentStatus && u.paymentStatus.toLowerCase() === "paid") {
+            paidCount++;
+        }
+    });
+
+    payments.forEach(p => {
+        totalRevenue += parseFloat(p.amount) || 0;
+    });
+
+    let totalExpenses = 0;
+    expenses.forEach(e => {
+        totalExpenses += parseFloat(e.amount) || 0;
+    });
+
+    const netIncome = totalRevenue - totalExpenses;
+    const collectionRate = units.length > 0 ? ((paidCount / units.length) * 100).toFixed(1) : 0.0;
+
+    // Update UI Cards
+    document.getElementById("repRevenue").innerText = "$" + totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2});
+    document.getElementById("repExpenses").innerText = "$" + totalExpenses.toLocaleString(undefined, {minimumFractionDigits: 2});
+    document.getElementById("repNOI").innerText = "$" + netIncome.toLocaleString(undefined, {minimumFractionDigits: 2});
+    document.getElementById("repCollection").innerText = collectionRate + "%";
+    document.getElementById("dbRecordCount").innerText = `${units.length} Active Units | ${expenses.length} Expense Entries`;
+
+    // Initialize/Update Chart with live calculated metrics
+    initChart(totalRevenue, totalExpenses, netIncome);
+
+    // Populate Table cleanly
+    const tbody = document.getElementById("reportTableBody");
+    tbody.innerHTML = "";
+
+    if (units.length === 0 && payments.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--muted);">No unit or payment records currently stored in database.</td></tr>`;
+        return;
+    }
+
+    units.forEach(u => {
+        const isPaid = u.paymentStatus && u.paymentStatus.toLowerCase() === "paid";
+        tbody.innerHTML += `
+            <tr>
+                <td><strong>${u.unit || u.name || 'Unit'}</strong></td>
+                <td>${u.tenant || 'Unassigned'}</td>
+                <td>$${parseFloat(u.rent || 0).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                <td><span class="badge ${isPaid ? 'success' : 'warning'}">${u.paymentStatus || 'Pending'}</span></td>
+            </tr>
+        `;
+    });
+}
+
+renderLiveReports();
+
+document.getElementById("refreshBtn").addEventListener("click", () => {
+    renderLiveReports();
+    alert("Financial report successfully synced with database updates!");
+});
+
+document.getElementById("logoutBtn").addEventListener("click", function(e){
+    e.preventDefault();
+    sessionStorage.removeItem("ag_authenticated");
+    window.location.href = "index.html";
+});
+</script>
 </body>
 </html>

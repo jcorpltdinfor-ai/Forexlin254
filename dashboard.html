@@ -3,765 +3,498 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0072CE">
-<title>AssetGuard Pro - Dashboard</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<title>AssetGuard Pro</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 :root{
-    --bg:#f4f7fb;
+    --bg:#f8f9fc;
     --card:#ffffff;
-    --line:#e6ebf2;
-    --text:#102033;
-    --muted:#6b7a8c;
-    --blue:#0072CE;
-    --blue-dark:#001A35;
-    --blue-light:#eaf5ff;
-    --orange:#ff6b00;
-    --green:#10a56a;
-    --red:#e5484d;
-    --sidebar:195px;
-    --radius:12px;
+    --line:#e8ecf1;
+    --text:#1a202c;
+    --muted:#718096;
+    --primary:#2563eb;
+    --primary-dark:#1e40af;
+    --primary-light:#dbeafe;
+    --success:#10b981;
+    --warning:#f59e0b;
+    --danger:#ef4444;
 }
 
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
+[data-theme="dark"]{
+    --bg:#0f172a;
+    --card:#1e293b;
+    --line:#334155;
+    --text:#f1f5f9;
+    --muted:#94a3b8;
+    --primary-light:#1e3a5f;
 }
 
-html,body{
-    width:100%;
-    min-height:100%;
-}
+*{box-sizing:border-box;margin:0;padding:0;}
 
 body{
     font-family:"Plus Jakarta Sans",sans-serif;
     background:var(--bg);
     color:var(--text);
-    overflow-x:hidden;
+    font-size:14px;
+    line-height:1.5;
 }
 
-/* =========================
-   SIDEBAR
-========================= */
+/* MENU BUTTON */
+.menu-btn{
+    position:fixed;
+    top:16px;
+    left:16px;
+    width:44px;
+    height:44px;
+    background:var(--primary);
+    color:#fff;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:20px;
+    z-index:1100;
+    box-shadow:0 4px 12px rgba(37,99,235,0.3);
+}
+
+/* SIDEBAR */
 .sidebar{
     position:fixed;
     top:0;
-    left:0;
+    left:-260px;
     bottom:0;
-    width:var(--sidebar);
-    background:var(--blue-dark);
-    color:#fff;
+    width:260px;
+    background:var(--card);
+    border-right:1px solid var(--line);
     z-index:1000;
+    transition:0.3s;
     display:flex;
     flex-direction:column;
-    padding:14px 10px;
-    transition:transform .25s ease;
+}
+
+.sidebar.open{left:0;}
+
+.sidebar-header{
+    padding:18px 16px;
+    border-bottom:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
 }
 
 .brand{
     display:flex;
     align-items:center;
-    gap:9px;
-    padding:3px 7px 16px;
+    gap:10px;
 }
 
-.brand-logo{
-    width:31px;
-    height:31px;
-    border-radius:9px;
-    background:var(--blue);
+.brand-icon{
+    width:36px;
+    height:36px;
+    background:var(--primary);
+    border-radius:10px;
     display:flex;
     align-items:center;
     justify-content:center;
+    color:#fff;
+    font-size:18px;
+    font-weight:800;
+}
+
+.brand-name{
+    font-size:15px;
+    font-weight:800;
+    line-height:1.2;
+}
+
+.brand-sub{
+    font-size:11px;
+    color:var(--muted);
+    margin-top:2px;
+}
+
+.close-btn{
+    width:32px;
+    height:32px;
+    background:var(--bg);
+    border:1px solid var(--line);
+    border-radius:8px;
+    cursor:pointer;
     font-size:16px;
-    font-weight:800;
-    flex:none;
+    color:var(--muted);
 }
 
-.brand-text{
-    line-height:1.05;
-}
+/* NAV */
+.nav{flex:1;padding:14px 12px;overflow-y:auto;}
 
-.brand-text strong{
-    display:block;
-    font-size:14px;
-    font-weight:800;
-}
+.nav-section{margin-bottom:18px;}
 
-.brand-text span{
-    display:block;
-    margin-top:3px;
-    color:#8fa5bc;
-    font-size:8px;
-    letter-spacing:.7px;
+.nav-title{
+    font-size:11px;
+    font-weight:700;
+    color:var(--muted);
     text-transform:uppercase;
+    letter-spacing:0.5px;
+    padding:0 12px;
+    margin-bottom:8px;
 }
 
-.nav{
-    display:flex;
-    flex-direction:column;
-    gap:3px;
-}
-
-.nav a{
+.nav-link{
     display:flex;
     align-items:center;
-    gap:9px;
-    min-height:35px;
-    padding:7px 9px;
-    color:#b9c7d6;
+    gap:11px;
+    padding:11px 12px;
+    margin-bottom:4px;
+    border-radius:10px;
     text-decoration:none;
-    border-radius:8px;
-    font-size:10px;
-    font-weight:600;
-    transition:.15s ease;
-}
-
-.nav a:hover{
-    background:rgba(255,255,255,.07);
-    color:#fff;
-}
-
-.nav a.active{
-    background:var(--blue);
-    color:#fff;
-}
-
-.nav-icon{
-    width:18px;
-    text-align:center;
-    font-size:14px;
-    flex:none;
-}
-
-.sidebar-bottom{
-    margin-top:auto;
-    border-top:1px solid rgba(255,255,255,.08);
-    padding-top:10px;
-}
-
-.sidebar-bottom a{
-    display:flex;
-    align-items:center;
-    gap:9px;
-    padding:8px 9px;
-    border-radius:8px;
-    color:#9fb1c4;
-    text-decoration:none;
-    font-size:10px;
+    color:var(--text);
+    font-size:13px;
     font-weight:600;
 }
 
-.sidebar-bottom a:hover{
+.nav-link:hover{background:var(--primary-light);color:var(--primary);}
+.nav-link.active{background:var(--primary);color:#fff;}
+
+.nav-icon{width:18px;text-align:center;font-size:15px;}
+
+/* FOOTER */
+.footer{
+    padding:14px 12px;
+    border-top:1px solid var(--line);
+}
+
+.theme-btn{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:11px;
+    border-radius:10px;
+    background:var(--bg);
+    cursor:pointer;
+}
+
+.theme-icon{
+    width:36px;
+    height:36px;
+    background:var(--primary);
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
     color:#fff;
-    background:rgba(255,255,255,.06);
+    font-size:16px;
 }
 
-/* =========================
-   MAIN
-========================= */
-.main{
-    margin-left:var(--sidebar);
-    min-height:100vh;
+.theme-label{font-size:13px;font-weight:600;}
+
+.logout-btn{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:11px;
+    margin-top:6px;
+    border-radius:10px;
+    text-decoration:none;
+    color:var(--text);
+    font-size:13px;
+    font-weight:600;
 }
 
-/* =========================
-   TOPBAR & FLOATING MENU BUTTON
-========================= */
+.logout-btn:hover{background:var(--danger);color:#fff;}
+
+/* OVERLAY */
+.overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.5);
+    z-index:900;
+}
+
+.overlay.show{display:block;}
+
+/* MAIN */
+.main{min-height:100vh;}
+
+/* TOPBAR */
 .topbar{
     height:58px;
-    background:#fff;
+    background:var(--card);
     border-bottom:1px solid var(--line);
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:0 22px 0 68px;
+    padding:0 20px 0 68px;
     position:sticky;
     top:0;
-    z-index:500;
 }
 
-.menu-btn{
-    display:flex !important;
-    align-items:center;
-    justify-content:center;
-    position:fixed;
-    top:11px;
-    left:14px;
+.page-title{font-size:16px;font-weight:800;color:var(--primary-dark);}
+.page-subtitle{font-size:11px;color:var(--muted);margin-top:2px;}
+
+.top-right{display:flex;align-items:center;gap:11px;}
+
+.notif{
     width:36px;
     height:36px;
-    background:var(--blue-dark);
-    color:#ffffff;
-    border:1px solid rgba(255,255,255,0.15);
-    border-radius:8px;
-    cursor:pointer;
-    font-size:18px;
-    z-index:1100;
-    box-shadow:0 2px 8px rgba(0,0,0,0.15);
-    transition:background .2s ease, transform .15s ease;
-}
-
-.menu-btn:hover{
-    background:var(--blue);
-    transform:scale(1.05);
-}
-
-.top-left{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.page-title{
-    font-size:16px;
-    font-weight:800;
-    color:var(--blue-dark);
-}
-
-.page-subtitle{
-    margin-top:2px;
-    font-size:9px;
-    color:var(--muted);
-}
-
-.top-right{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.notification{
-    width:32px;
-    height:32px;
     border:1px solid var(--line);
-    background:#fff;
-    border-radius:8px;
+    background:var(--card);
+    border-radius:10px;
     display:flex;
     align-items:center;
     justify-content:center;
     cursor:pointer;
-    font-size:14px;
+    font-size:16px;
+    position:relative;
 }
 
-.profile{
-    display:flex;
-    align-items:center;
-    gap:7px;
+.badge{
+    position:absolute;
+    top:-3px;
+    right:-3px;
+    background:var(--danger);
+    color:#fff;
+    font-size:9px;
+    font-weight:800;
+    padding:2px 5px;
+    border-radius:8px;
+    min-width:16px;
+    text-align:center;
 }
 
 .avatar{
-    width:30px;
-    height:30px;
+    width:36px;
+    height:36px;
+    background:var(--primary);
     border-radius:50%;
-    background:var(--blue);
-    color:#fff;
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:11px;
+    color:#fff;
+    font-size:14px;
     font-weight:800;
 }
 
-.profile-text{
-    line-height:1.1;
-}
+/* CONTENT */
+.content{padding:20px;max-width:1200px;}
 
-.profile-text strong{
-    display:block;
-    font-size:9px;
-}
+.welcome{margin-bottom:20px;}
+.welcome h1{font-size:20px;font-weight:800;color:var(--primary-dark);}
+.welcome p{margin-top:5px;font-size:12px;color:var(--muted);}
 
-.profile-text span{
-    display:block;
-    margin-top:2px;
-    color:var(--muted);
-    font-size:8px;
-}
-
-/* =========================
-   CONTENT
-========================= */
-.content{
-    padding:18px 22px 30px;
-    max-width:1500px;
-    margin:auto;
-}
-
-.welcome{
-    margin-bottom:14px;
-}
-
-.welcome h1{
-    font-size:20px;
-    line-height:1.2;
-    font-weight:800;
-    color:var(--blue-dark);
-}
-
-.welcome p{
-    margin-top:4px;
-    font-size:10px;
-    color:var(--muted);
-}
-
-/* =========================
-   METRICS
-========================= */
+/* METRICS */
 .metrics{
     display:grid;
     grid-template-columns:repeat(4,1fr);
-    gap:10px;
-    margin-bottom:14px;
+    gap:12px;
+    margin-bottom:20px;
 }
 
 .metric{
     background:var(--card);
     border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:13px;
-    min-width:0;
+    border-radius:11px;
+    padding:15px;
 }
 
-.metric-top{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:8px;
-}
-
-.metric-label{
-    font-size:9px;
-    color:var(--muted);
-    font-weight:600;
-}
+.metric-top{display:flex;align-items:center;justify-content:space-between;}
+.metric-label{font-size:11px;font-weight:600;color:var(--muted);}
 
 .metric-icon{
-    width:27px;
-    height:27px;
-    border-radius:8px;
-    background:var(--blue-light);
-    color:var(--blue);
+    width:36px;
+    height:36px;
+    background:var(--primary-light);
+    border-radius:9px;
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:12px;
-    flex:none;
+    color:var(--primary);
+    font-size:16px;
 }
 
-.metric-value{
-    margin-top:7px;
-    font-size:21px;
-    font-weight:800;
-    color:var(--blue-dark);
-}
+.metric-value{margin-top:9px;font-size:22px;font-weight:800;}
+.metric-note{margin-top:3px;font-size:11px;color:var(--muted);}
+.metric-note.green{color:var(--success);}
+.metric-note.red{color:var(--danger);}
 
-.metric-note{
-    margin-top:3px;
-    font-size:8px;
-    color:var(--muted);
-}
-
-.metric-note.green{
-    color:var(--green);
-}
-
-.metric-note.red{
-    color:var(--red);
-}
-
-/* =========================
-   QUICK ACTIONS
-========================= */
+/* ACTIONS */
 .section-head{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    margin-bottom:8px;
-}
-
-.section-head h2{
-    font-size:12px;
-    font-weight:800;
-    color:var(--blue-dark);
-}
-
-.section-head span{
-    font-size:8px;
-    color:var(--muted);
-}
-
-.quick-actions{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:8px;
     margin-bottom:14px;
 }
 
+.section-head h2{font-size:15px;font-weight:800;color:var(--primary-dark);}
+.section-head span{font-size:11px;color:var(--muted);}
+
+.actions{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:11px;
+    margin-bottom:20px;
+}
+
 .action{
+    background:var(--card);
     border:1px solid var(--line);
-    background:#fff;
-    border-radius:10px;
-    padding:10px;
+    border-radius:11px;
+    padding:13px;
     display:flex;
     align-items:center;
-    gap:9px;
+    gap:11px;
     text-decoration:none;
     color:var(--text);
-    transition:.15s ease;
 }
 
 .action:hover{
-    border-color:#b9dafa;
-    transform:translateY(-1px);
+    border-color:var(--primary);
+    transform:translateY(-2px);
+    box-shadow:0 6px 16px rgba(0,0,0,0.08);
 }
 
 .action-icon{
-    width:31px;
-    height:31px;
-    border-radius:8px;
+    width:38px;
+    height:38px;
+    background:var(--primary-light);
+    border-radius:9px;
     display:flex;
     align-items:center;
     justify-content:center;
-    background:var(--blue-light);
-    color:var(--blue);
-    font-size:13px;
-    flex:none;
+    color:var(--primary);
+    font-size:16px;
 }
 
-.action.orange .action-icon{
-    background:#fff1e8;
-    color:var(--orange);
-}
+.action.orange .action-icon{background:#fef3c7;color:var(--warning);}
+.action.green .action-icon{background:#d1fae5;color:var(--success);}
 
-.action.green .action-icon{
-    background:#eafaf3;
-    color:var(--green);
-}
+.action-text strong{display:block;font-size:12px;font-weight:700;line-height:1.3;}
+.action-text span{display:block;margin-top:2px;font-size:10px;color:var(--muted);}
 
-.action-text strong{
-    display:block;
-    font-size:9px;
-    font-weight:800;
-}
-
-.action-text span{
-    display:block;
-    margin-top:2px;
-    font-size:7px;
-    color:var(--muted);
-}
-
-/* =========================
-   OCCUPANCY
-========================= */
-.occupancy-card{
-    background:#fff;
+/* OCCUPANCY */
+.occupancy{
+    background:var(--card);
     border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:14px;
+    border-radius:11px;
+    padding:15px;
 }
 
-.occupancy-layout{
+.occupancy-grid{
     display:grid;
-    grid-template-columns:minmax(0,1fr) 210px;
+    grid-template-columns:1fr 190px;
     gap:18px;
     align-items:center;
 }
 
-.chart-wrap{
-    height:210px;
-    position:relative;
-}
+.chart-box{height:190px;}
 
-.occupancy-summary{
+.occupancy-info{
     border-left:1px solid var(--line);
     padding-left:18px;
 }
 
-.summary-number{
-    font-size:30px;
-    font-weight:800;
-    color:var(--blue-dark);
-    line-height:1;
+.occupancy-percent{font-size:36px;font-weight:800;color:var(--primary-dark);}
+.occupancy-label{margin-top:5px;font-size:11px;color:var(--muted);}
+
+.legend{margin-top:18px;display:flex;flex-direction:column;gap:7px;}
+
+.legend-item{display:flex;align-items:center;justify-content:space-between;}
+.legend-left{display:flex;align-items:center;gap:6px;}
+
+.dot{width:9px;height:9px;border-radius:50%;}
+.dot.occupied{background:var(--primary);}
+.dot.vacant{background:#cbd5e1;}
+
+.legend-text{font-size:11px;color:var(--muted);}
+.legend-num{font-size:11px;font-weight:700;}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+    .metrics,.actions{grid-template-columns:repeat(2,1fr);}
 }
 
-.summary-label{
-    margin-top:4px;
-    color:var(--muted);
-    font-size:9px;
-}
-
-.legend{
-    margin-top:16px;
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-}
-
-.legend-item{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    font-size:9px;
-}
-
-.legend-left{
-    display:flex;
-    align-items:center;
-    gap:6px;
-    color:var(--muted);
-}
-
-.dot{
-    width:8px;
-    height:8px;
-    border-radius:50%;
-}
-
-.dot.occupied{
-    background:var(--blue);
-}
-
-.dot.vacant{
-    background:#dce5ef;
-}
-
-.legend-item strong{
-    font-size:9px;
-    color:var(--text);
-}
-
-/* =========================
-   MOBILE
-========================= */
-.overlay{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.35);
-    z-index:900;
-}
-
-@media(max-width:900px){
-    :root{
-        --sidebar:190px;
-    }
-    .metrics{
-        grid-template-columns:repeat(2,1fr);
-    }
-    .quick-actions{
-        grid-template-columns:repeat(2,1fr);
-    }
-    .occupancy-layout{
-        grid-template-columns:1fr;
-    }
-    .occupancy-summary{
-        border-left:0;
-        border-top:1px solid var(--line);
-        padding-left:0;
-        padding-top:14px;
-    }
-}
-
-@media(max-width:700px){
-    .sidebar{
-        transform:translateX(-100%);
-        box-shadow:8px 0 25px rgba(0,0,0,.15);
-    }
-    .sidebar.open{
-        transform:translateX(0);
-    }
-    .overlay.show{
-        display:block;
-    }
-    .main{
-        margin-left:0;
-    }
-    .topbar{
-        height:54px;
-        padding:0 12px 0 58px;
-    }
-    .profile-text{
-        display:none;
-    }
-    .content{
-        padding:14px 12px 24px;
-    }
-    .welcome{
-        margin-bottom:11px;
-    }
-    .welcome h1{
-        font-size:17px;
-    }
-    .welcome p{
-        font-size:9px;
-    }
-    .metrics{
-        gap:7px;
-        margin-bottom:11px;
-    }
-    .metric{
-        padding:10px;
-    }
-    .metric-value{
-        font-size:18px;
-    }
-    .metric-icon{
-        width:24px;
-        height:24px;
-        font-size:11px;
-    }
-    .quick-actions{
-        gap:7px;
-        margin-bottom:11px;
-    }
-    .action{
-        padding:8px;
-        gap:7px;
-    }
-    .action-icon{
-        width:28px;
-        height:28px;
-        font-size:12px;
-    }
-    .section-head h2{
-        font-size:11px;
-    }
-    .occupancy-card{
-        padding:11px;
-    }
-    .chart-wrap{
-        height:185px;
-    }
-}
-
-@media(max-width:380px){
-    .metrics{
-        grid-template-columns:1fr 1fr;
-    }
-    .metric-label{
-        font-size:8px;
-    }
-    .metric-value{
-        font-size:17px;
-    }
-    .action-text strong{
-        font-size:8px;
-    }
-    .action-text span{
-        font-size:6px;
-    }
+@media(max-width:768px){
+    .topbar{padding:0 14px 0 56px;}
+    .content{padding:14px;}
+    .occupancy-grid{grid-template-columns:1fr;}
+    .occupancy-info{border-left:0;border-top:1px solid var(--line);padding-left:0;padding-top:15px;}
 }
 </style>
 </head>
 <body>
 
-<!-- FLOATING MENU BUTTON -->
-<button class="menu-btn" id="menuBtn" aria-label="Toggle menu">☰</button>
+<button class="menu-btn" onclick="toggleSidebar()">☰</button>
 
-<!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
-    <div class="brand">
-        <div class="brand-logo">A</div>
-        <div class="brand-text">
-            <strong>AssetGuard</strong>
-            <span>Property Manager</span>
+    <div class="sidebar-header">
+        <div class="brand">
+            <div class="brand-icon">A</div>
+            <div>
+                <div class="brand-name">AssetGuard</div>
+                <div class="brand-sub">Property Manager</div>
+            </div>
         </div>
+        <button class="close-btn" onclick="toggleSidebar()">✕</button>
     </div>
 
     <nav class="nav">
-        <a href="dashboard.html" class="active">
-            <span class="nav-icon">⌂</span>
-            <span>Dashboard</span>
-        </a>
-        <a href="payments.html">
-            <span class="nav-icon">₿</span>
-            <span>Payments</span>
-        </a>
-        <a href="units.html">
-            <span class="nav-icon">▦</span>
-            <span>Units & Tenants</span>
-        </a>
-        <a href="tenants.html">
-            <span class="nav-icon">♙</span>
-            <span>Tenants Directory</span>
-        </a>
-        <a href="maintenance.html">
-            <span class="nav-icon">🔧</span>
-            <span>Maintenance</span>
-        </a>
-        <a href="utilities.html">
-            <span class="nav-icon">⚡</span>
-            <span>Utilities</span>
-        </a>
-        <a href="statements.html">
-            <span class="nav-icon">▤</span>
-            <span>Statements</span>
-        </a>
-        <a href="expenses.html">
-            <span class="nav-icon">▣</span>
-            <span>Expenses</span>
-        </a>
-        <a href="reports.html">
-            <span class="nav-icon">◒</span>
-            <span>Financial Reports</span>
-        </a>
-        <a href="property.html">
-            <span class="nav-icon">⌂</span>
-            <span>Property Profile</span>
-        </a>
+        <div class="nav-section">
+            <div class="nav-title">Main</div>
+            <a href="dashboard.html" class="nav-link active"><span class="nav-icon">⌂</span><span>Dashboard</span></a>
+            <a href="payments.html" class="nav-link"><span class="nav-icon">₿</span><span>Payments</span></a>
+            <a href="units.html" class="nav-link"><span class="nav-icon">▦</span><span>Units & Tenants</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-title">Management</div>
+            <a href="tenants.html" class="nav-link"><span class="nav-icon">♙</span><span>Tenants Directory</span></a>
+            <a href="maintenance.html" class="nav-link"><span class="nav-icon">🔧</span><span>Maintenance</span></a>
+            <a href="utilities.html" class="nav-link"><span class="nav-icon">⚡</span><span>Utilities</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-title">Financial</div>
+            <a href="statements.html" class="nav-link"><span class="nav-icon">▤</span><span>Statements</span></a>
+            <a href="expenses.html" class="nav-link"><span class="nav-icon">▣</span><span>Expenses</span></a>
+            <a href="reports.html" class="nav-link"><span class="nav-icon">◒</span><span>Financial Reports</span></a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-title">Settings</div>
+            <a href="property.html" class="nav-link"><span class="nav-icon">⌂</span><span>Property Profile</span></a>
+            <a href="settings.html" class="nav-link"><span class="nav-icon">⚙</span><span>Settings</span></a>
+        </div>
     </nav>
 
-    <div class="sidebar-bottom">
-        <a href="settings.html">
-            <span class="nav-icon">⚙</span>
-            <span>Settings</span>
-        </a>
-        <a href="#" id="logoutBtn">
-            <span class="nav-icon">↪</span>
-            <span>Logout</span>
-        </a>
+    <div class="footer">
+        <div class="theme-btn" onclick="toggleTheme()">
+            <div class="theme-icon" id="themeIcon">🌙</div>
+            <div class="theme-label" id="themeLabel">Dark Mode</div>
+        </div>
+        <a href="index.html" class="logout-btn"><span class="nav-icon">↪</span><span>Logout</span></a>
     </div>
 </aside>
 
-<div class="overlay" id="overlay"></div>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
-<!-- MAIN -->
 <main class="main">
-
-    <!-- TOPBAR -->
     <header class="topbar">
-        <div class="top-left">
-            <div>
-                <div class="page-title">Dashboard</div>
-                <div class="page-subtitle">Property management overview</div>
-            </div>
+        <div>
+            <div class="page-title">Dashboard</div>
+            <div class="page-subtitle">Property management overview</div>
         </div>
-
         <div class="top-right">
-            <button class="notification" title="Notifications">🔔</button>
-            <div class="profile">
-                <div class="avatar">A</div>
-                <div class="profile-text">
-                    <strong>Administrator</strong>
-                    <span>Property Manager</span>
-                </div>
-            </div>
+            <button class="notif" onclick="alert('📬 3 new notifications')">🔔<span class="badge">3</span></button>
+            <div class="avatar">A</div>
         </div>
     </header>
 
-    <!-- CONTENT -->
     <section class="content">
         <div class="welcome">
-            <h1>Good morning</h1>
-            <p>Here is your property overview.</p>
+            <h1 id="greeting">Good morning</h1>
+            <p id="date">Loading...</p>
         </div>
 
-        <!-- METRICS -->
         <div class="metrics">
             <div class="metric">
                 <div class="metric-top">
@@ -771,7 +504,6 @@ body{
                 <div class="metric-value">42</div>
                 <div class="metric-note">Registered units</div>
             </div>
-
             <div class="metric">
                 <div class="metric-top">
                     <span class="metric-label">Occupied</span>
@@ -780,7 +512,6 @@ body{
                 <div class="metric-value">38</div>
                 <div class="metric-note green">90.5% occupancy</div>
             </div>
-
             <div class="metric">
                 <div class="metric-top">
                     <span class="metric-label">Collected</span>
@@ -789,7 +520,6 @@ body{
                 <div class="metric-value">KSh 285K</div>
                 <div class="metric-note green">This month</div>
             </div>
-
             <div class="metric">
                 <div class="metric-top">
                     <span class="metric-label">Arrears</span>
@@ -800,84 +530,55 @@ body{
             </div>
         </div>
 
-        <!-- QUICK ACTIONS -->
         <div class="section-head">
             <h2>Quick Actions</h2>
             <span>Common tasks</span>
         </div>
 
-        <div class="quick-actions">
+        <div class="actions">
             <a href="payments.html" class="action">
                 <div class="action-icon">₿</div>
-                <div class="action-text">
-                    <strong>Record Rent</strong>
-                    <span>Record tenant payment</span>
-                </div>
+                <div class="action-text"><strong>Record Rent</strong><span>Record tenant payment</span></div>
             </a>
-
             <a href="payments.html" class="action orange">
                 <div class="action-icon">!</div>
-                <div class="action-text">
-                    <strong>Apply Late Fee</strong>
-                    <span>Update outstanding balance</span>
-                </div>
+                <div class="action-text"><strong>Apply Late Fee</strong><span>Update outstanding balance</span></div>
             </a>
-
             <a href="maintenance.html" class="action green">
                 <div class="action-icon">🔧</div>
-                <div class="action-text">
-                    <strong>Maintenance</strong>
-                    <span>Record a repair request</span>
-                </div>
+                <div class="action-text"><strong>Maintenance</strong><span>Record a repair request</span></div>
             </a>
-
             <a href="statements.html" class="action">
                 <div class="action-icon">▤</div>
-                <div class="action-text">
-                    <strong>Statements</strong>
-                    <span>View landlord statements</span>
-                </div>
+                <div class="action-text"><strong>Statements</strong><span>View landlord statements</span></div>
             </a>
         </div>
 
-        <!-- OCCUPANCY -->
         <div class="section-head">
             <h2>Occupancy</h2>
             <span>Current unit status</span>
         </div>
 
-        <div class="occupancy-card">
-            <div class="occupancy-layout">
-                <div class="chart-wrap">
-                    <canvas id="occupancyChart"></canvas>
+        <div class="occupancy">
+            <div class="occupancy-grid">
+                <div class="chart-box">
+                    <canvas id="chart"></canvas>
                 </div>
-
-                <div class="occupancy-summary">
-                    <div class="summary-number">90.5%</div>
-                    <div class="summary-label">Current occupancy rate</div>
-
+                <div class="occupancy-info">
+                    <div class="occupancy-percent">90.5%</div>
+                    <div class="occupancy-label">Current occupancy rate</div>
                     <div class="legend">
                         <div class="legend-item">
-                            <div class="legend-left">
-                                <span class="dot occupied"></span>
-                                <span>Occupied</span>
-                            </div>
-                            <strong>38</strong>
+                            <div class="legend-left"><span class="dot occupied"></span><span class="legend-text">Occupied</span></div>
+                            <span class="legend-num">38</span>
                         </div>
-
                         <div class="legend-item">
-                            <div class="legend-left">
-                                <span class="dot vacant"></span>
-                                <span>Vacant</span>
-                            </div>
-                            <strong>4</strong>
+                            <div class="legend-left"><span class="dot vacant"></span><span class="legend-text">Vacant</span></div>
+                            <span class="legend-num">4</span>
                         </div>
-
                         <div class="legend-item">
-                            <div class="legend-left">
-                                <span>Units</span>
-                            </div>
-                            <strong>42</strong>
+                            <div class="legend-left"><span class="legend-text">Total Units</span></div>
+                            <span class="legend-num">42</span>
                         </div>
                     </div>
                 </div>
@@ -887,91 +588,79 @@ body{
 </main>
 
 <script>
-/* =========================
-   SIDEBAR TOGGLE LOGIC
-========================= */
-const sidebar = document.getElementById("sidebar");
-const menuBtn = document.getElementById("menuBtn");
-const overlay = document.getElementById("overlay");
-
 function toggleSidebar(){
-    sidebar.classList.toggle("open");
-    overlay.classList.toggle("show");
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('overlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
 }
 
-function closeSidebar(){
-    sidebar.classList.remove("open");
-    overlay.classList.remove("show");
-}
-
-if(menuBtn){
-    menuBtn.addEventListener("click", toggleSidebar);
-}
-
-if(overlay){
-    overlay.addEventListener("click", closeSidebar);
-}
-
-document.querySelectorAll(".sidebar a").forEach(link => {
-    link.addEventListener("click", () => {
-        if(window.innerWidth <= 700){
-            closeSidebar();
-        }
-    });
-});
-
-document.addEventListener("keydown", e => {
-    if(e.key === "Escape"){
-        closeSidebar();
+function toggleTheme(){
+    var html = document.documentElement;
+    var icon = document.getElementById('themeIcon');
+    var label = document.getElementById('themeLabel');
+    
+    if(html.getAttribute('data-theme') === 'dark'){
+        html.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        icon.textContent = '🌙';
+        label.textContent = 'Dark Mode';
+    }else{
+        html.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        icon.textContent = '☀️';
+        label.textContent = 'Light Mode';
     }
-});
+}
 
-/* =========================
-   OCCUPANCY CHART
-========================= */
-const chartCanvas = document.getElementById("occupancyChart");
+var savedTheme = localStorage.getItem('theme') || 'light';
+document.documentElement.setAttribute('data-theme', savedTheme);
+if(savedTheme === 'dark'){
+    document.getElementById('themeIcon').textContent = '☀️';
+    document.getElementById('themeLabel').textContent = 'Light Mode';
+}
 
-if(chartCanvas){
-    new Chart(chartCanvas, {
-        type: "doughnut",
+var now = new Date();
+var hour = now.getHours();
+var greeting = 'Good evening';
+if(hour < 12) greeting = 'Good morning';
+else if(hour < 18) greeting = 'Good afternoon';
+document.getElementById('greeting').textContent = greeting;
+
+var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+document.getElementById('date').textContent = now.toLocaleDateString('en-KE', options);
+
+var page = window.location.pathname.split('/').pop() || 'dashboard.html';
+var links = document.querySelectorAll('.nav-link');
+for(var i = 0; i < links.length; i++){
+    var href = links[i].getAttribute('href');
+    if(href === page){
+        links[i].classList.add('active');
+    }else{
+        links[i].classList.remove('active');
+    }
+}
+
+var ctx = document.getElementById('chart');
+if(ctx){
+    new Chart(ctx, {
+        type: 'doughnut',
         data: {
-            labels: ["Occupied", "Vacant"],
+            labels: ['Occupied', 'Vacant'],
             datasets: [{
                 data: [38, 4],
-                backgroundColor: ["#0072CE", "#dce5ef"],
-                borderWidth: 0,
-                hoverOffset: 3
+                backgroundColor: ['#2563eb', '#cbd5e1'],
+                borderWidth: 0
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            cutout: "72%",
+            cutout: '70%',
             plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: function(context){
-                            return " " + context.label + ": " + context.raw + " units";
-                        }
-                    }
-                }
+                legend: { display: false }
             }
         }
-    });
-}
-
-/* =========================
-   LOGOUT
-========================= */
-const logoutBtn = document.getElementById("logoutBtn");
-
-if(logoutBtn){
-    logoutBtn.addEventListener("click", function(e){
-        e.preventDefault();
-        try{ sessionStorage.removeItem("ag_authenticated"); }catch(err){}
-        try{ localStorage.removeItem("ag_session_active"); }catch(err){}
-        window.location.href = "index.html";
     });
 }
 </script>

@@ -3,67 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AssetGuard Pro | Complete Units & Tenants Intelligence</title>
+  <title>AssetGuard Pro | Master Units & Tenants Intelligence</title>
+  <!-- Matching Dashboard Font & Styling System -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     *{ box-sizing:border-box; margin:0; padding:0; } 
-    :root{ 
-      --primary:#0284c7; 
-      --primary-dark:#075985; 
-      --primary-light:#e0f2fe; 
-      --success:#16a34a; 
-      --success-light:#dcfce7; 
-      --danger:#dc2626; 
-      --danger-light:#fee2e2; 
-      --warning:#d97706; 
-      --warning-light:#fef3c7; 
-      --dark:#0f172a; 
-      --muted:#64748b; 
-      --border:#e2e8f0; 
-      --bg:#f8fafc; 
-      --white:#fff; 
-    } 
+    
+    /* Theme Variables Setup (Synchronized with dashboard.html) */
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --primary-light: #e0f2fe;
+      --success: #16a34a;
+      --success-light: #dcfce7;
+      --danger: #dc2626;
+      --danger-light: #fee2e2;
+      --warning: #d97706;
+      --warning-light: #fef3c7;
+      --radius: 12px;
+    }
+
+    /* Light Theme (Default) */
+    html[data-theme="light"], html:not([data-theme]) {
+      --bg: #f8fafc;
+      --white: #ffffff;
+      --dark: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --card-bg: #ffffff;
+      --card-header-bg: #fafafa;
+      --table-hover: #f8fbff;
+      --input-bg: #f8fafc;
+      --shadow: 0 4px 20px rgba(15,23,42,.04);
+    }
+
+    /* Dark Theme */
+    html[data-theme="dark"] {
+      --bg: #090d16;
+      --white: #131b2e;
+      --dark: #f8fafc;
+      --muted: #94a3b8;
+      --border: #1e293b;
+      --card-bg: #131b2e;
+      --card-header-bg: #182238;
+      --table-hover: #1a253f;
+      --input-bg: #0b111e;
+      --shadow: 0 4px 20px rgba(0,0,0,.3);
+    }
+
     html, body{ width:100%; min-height:100%; overflow-x:hidden; } 
     body{ 
-      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; 
-      background:var(--bg); 
-      color:var(--dark); 
-      font-size:12px; 
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; 
+      background: var(--bg); 
+      color: var(--dark); 
+      font-size: 13px; 
+      line-height: 1.5;
+      transition: background 0.3s ease, color 0.3s ease;
     } 
     button, input, select{ font:inherit; } 
     button{ cursor:pointer; } 
-    .app{ width:100%; max-width:1550px; margin:auto; padding:10px; overflow-x:hidden; } 
+    .app{ width:100%; max-width:1500px; margin:auto; padding:16px; overflow-x:hidden; } 
 
     /* ========================================================= TOP NAVIGATION BAR ========================================================= */ 
     .navbar {
       background: var(--white);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px 16px 10px 52px; 
+      border-radius: var(--radius);
+      padding: 12px 20px 12px 56px; 
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 10px;
-      box-shadow: 0 3px 12px rgba(15,23,42,.03);
+      gap: 12px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
       width: 100%;
-      min-height: 50px;
+      min-height: 56px;
+      transition: background 0.3s ease, border-color 0.3s ease;
     }
     .nav-brand {
-      font-size: 14px;
-      font-weight: 850;
+      font-size: 15px;
+      font-weight: 800;
       color: var(--dark);
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
 
     /* ========================================================= FLOATING MENU BUTTON (TOP-LEFT) ========================================================= */
     .floating-home-btn {
       position: fixed;
-      top: 12px;
-      left: 12px;
-      width: 38px;
-      height: 38px;
+      top: 16px;
+      left: 16px;
+      width: 40px;
+      height: 40px;
       background: var(--dark);
       border-radius: 10px;
       display: flex;
@@ -71,15 +105,15 @@
       align-items: center;
       justify-content: center;
       gap: 4px;
-      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.3);
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.25);
       z-index: 4000;
       text-decoration: none;
       border: 1px solid rgba(255, 255, 255, 0.15);
       transition: transform 0.2s ease, background 0.2s ease;
     }
     .floating-home-btn:hover {
-      transform: scale(1.06);
-      background: var(--primary-dark);
+      transform: scale(1.05);
+      background: var(--primary);
     }
     .floating-home-btn span {
       display: block;
@@ -91,106 +125,116 @@
 
     /* ========================================================= HEADER ========================================================= */ 
     .page-header{ 
-      background:var(--white); 
-      border:1px solid var(--border); 
-      border-radius:12px; 
-      padding:12px; 
-      display:flex; 
-      align-items:center; 
-      justify-content:space-between; 
-      gap:10px; 
-      margin-bottom:10px; 
+      background: var(--white); 
+      border: 1px solid var(--border); 
+      border-radius: var(--radius); 
+      padding: 18px 20px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      gap: 12px; 
+      margin-bottom: 16px; 
       width: 100%;
+      box-shadow: var(--shadow);
+      transition: background 0.3s ease, border-color 0.3s ease;
     } 
-    .page-title h1{ font-size:15px; line-height:1.2; font-weight:850; } 
-    .page-title p{ color:var(--muted); font-size:9px; margin-top:2px; } 
+    .page-title h1{ font-size: 18px; line-height: 1.2; font-weight: 800; color: var(--dark); } 
+    .page-title p{ color: var(--muted); font-size: 12px; margin-top: 4px; } 
 
     .btn{ 
-      border:0; border-radius:8px; min-height:34px; padding:6px 12px; display:inline-flex; 
-      align-items:center; justify-content:center; gap:5px; font-size:10px; font-weight:750; transition:.18s ease; white-space:nowrap; 
+      border:0; border-radius: 10px; min-height: 40px; padding: 8px 16px; display: inline-flex; 
+      align-items: center; justify-content: center; gap: 8px; font-size: 12px; font-weight: 700; transition: .18s ease; white-space: nowrap; 
     } 
-    .btn:hover{ transform:translateY(-1px); } 
-    .btn-primary{ background:var(--primary); color:white; } 
-    .btn-primary:hover{ background:var(--primary-dark); } 
-    .btn-secondary{ background:#f1f5f9; color:#334155; border:1px solid var(--border); } 
+    .btn:hover{ transform: translateY(-1px); } 
+    .btn-primary{ background: var(--primary); color: white; } 
+    .btn-primary:hover{ background: var(--primary-dark); } 
+    .btn-secondary{ background: var(--input-bg); color: var(--dark); border: 1px solid var(--border); } 
+    .btn-secondary:hover{ opacity: 0.9; }
 
     /* ========================================================= STATS ========================================================= */ 
-    .stats{ display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:8px; margin-bottom:10px; width:100%; } 
-    @media(max-width:1100px){ .stats{ grid-template-columns:repeat(3, minmax(0, 1fr)); } }
-    @media(max-width:700px){ .stats{ grid-template-columns:repeat(2, minmax(0, 1fr)); } }
+    .stats{ display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; width: 100%; } 
+    @media(max-width:1100px){ .stats{ grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media(max-width:700px){ .stats{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
-    .stat{ background:var(--white); border:1px solid var(--border); border-radius:11px; padding:10px; width:100%; } 
-    .stat-top{ display:flex; align-items:center; justify-content:space-between; gap:5px; } 
-    .stat-label{ color:var(--muted); font-size:9px; font-weight:750; text-transform:uppercase; letter-spacing:.3px; } 
-    .stat-icon{ width:28px; height:28px; border-radius:8px; display:grid; place-items:center; font-size:12px; } 
-    .stat-value{ margin-top:6px; font-size:16px; line-height:1; font-weight:900; } 
-    .stat-note{ margin-top:4px; color:var(--muted); font-size:8px; } 
+    .stat{ background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; width: 100%; box-shadow: var(--shadow); transition: background 0.3s ease, border-color 0.3s ease; } 
+    .stat-top{ display: flex; align-items: center; justify-content: space-between; gap: 8px; } 
+    .stat-label{ color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; } 
+    .stat-icon{ width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; font-size: 14px; } 
+    .stat-value{ margin-top: 8px; font-size: 20px; line-height: 1; font-weight: 800; color: var(--dark); } 
+    .stat-note{ margin-top: 6px; color: var(--muted); font-size: 11px; } 
 
     /* Analytics / Spreadsheet Visualizer Section */
-    .analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
     @media(max-width: 900px){ .analytics-grid { grid-template-columns: 1fr; } }
 
     .card{ 
-      background:var(--white); border:1px solid var(--border); border-radius:12px; overflow:hidden; 
-      box-shadow:0 3px 15px rgba(15,23,42,.03); margin-bottom:10px; width:100%; 
+      background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; 
+      box-shadow: var(--shadow); margin-bottom: 16px; width: 100%; 
+      transition: background 0.3s ease, border-color 0.3s ease;
     } 
-    .card-header{ padding:10px 14px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; } 
-    .card-title{ font-size:12px; font-weight:850; } 
-    .card-subtitle{ color:var(--muted); font-size:9px; margin-top:2px; } 
-    .card-body{ padding:12px; width:100%; } 
+    .card-header{ padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; background: var(--card-header-bg); } 
+    .card-title{ font-size: 14px; font-weight: 800; color: var(--dark); } 
+    .card-subtitle{ color: var(--muted); font-size: 11px; margin-top: 2px; } 
+    .card-body{ padding: 18px; width: 100%; } 
 
     /* Visual Graph Bars */
-    .bar-chart-container { display: flex; flex-direction: column; gap: 8px; }
-    .bar-row { display: flex; align-items: center; gap: 8px; font-size: 10px; }
-    .bar-label { width: 90px; font-weight: 750; color: var(--muted); }
-    .bar-track { flex: 1; height: 10px; background: #e2e8f0; border-radius: 999px; overflow: hidden; }
+    .bar-chart-container { display: flex; flex-direction: column; gap: 12px; }
+    .bar-row { display: flex; align-items: center; gap: 12px; font-size: 12px; }
+    .bar-label { width: 120px; font-weight: 700; color: var(--muted); }
+    .bar-track { flex: 1; height: 12px; background: var(--border); border-radius: 999px; overflow: hidden; }
     .bar-fill { height: 100%; border-radius: 999px; transition: width 0.5s ease; }
-    .bar-value { width: 80px; text-align: right; font-weight: 800; }
+    .bar-value { width: 100px; text-align: right; font-weight: 800; color: var(--dark); }
 
     /* Toolbar */
-    .toolbar{ display:flex; gap:6px; align-items:center; width:100%; flex-wrap:wrap; margin-bottom:10px; } 
-    .search{ flex:1; min-width:180px; position:relative; } 
-    .search input{ width:100%; height:34px; border:1px solid var(--border); border-radius:8px; padding:0 10px 0 28px; outline:none; background:#f8fafc; font-size:10px; } 
-    .search-icon{ position:absolute; left:8px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:10px; } 
-    .filter{ height:34px; border:1px solid var(--border); border-radius:8px; background:#f8fafc; padding:0 8px; outline:none; color:#334155; font-size:10px; font-weight:700; } 
+    .toolbar{ display: flex; gap: 10px; align-items: center; width: 100%; flex-wrap: wrap; margin-bottom: 16px; } 
+    .search{ flex: 1; min-width: 220px; position: relative; } 
+    .search input{ width: 100%; height: 40px; border: 1px solid var(--border); border-radius: 10px; padding: 0 12px 0 36px; outline: none; background: var(--input-bg); color: var(--dark); font-size: 12px; font-weight: 500; } 
+    .search input:focus { border-color: var(--primary); }
+    .search-icon{ position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 12px; } 
+    .filter{ height: 40px; border: 1px solid var(--border); border-radius: 10px; background: var(--input-bg); padding: 0 14px; outline: none; color: var(--dark); font-size: 12px; font-weight: 700; } 
 
     /* Spreadsheet Table Styles */
     .desktop-table-view { display: block; width: 100%; overflow-x: auto; }
-    table{ width:100%; min-width:1100px; border-collapse:collapse; } 
+    table{ width: 100%; min-width: 1200px; border-collapse: collapse; } 
     thead th{ 
-      background:#f8fafc; color:#475569; font-size:9px; text-transform:uppercase; letter-spacing:.35px; 
-      font-weight:850; padding:8px; border-bottom:1px solid var(--border); border-top:1px solid var(--border); text-align:left; white-space:nowrap; 
+      background: var(--card-header-bg); color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .5px; 
+      font-weight: 800; padding: 12px 10px; border-bottom: 1px solid var(--border); border-top: 1px solid var(--border); text-align: left; white-space: nowrap; 
     } 
-    tbody td{ padding:8px; border-bottom:1px solid #edf2f7; font-size:10px; vertical-align:middle; white-space:nowrap; } 
-    tbody tr:last-child td{ border-bottom:0; } 
-    tbody tr:hover{ background:#f8fbff; } 
-    .money{ font-weight:800; } 
+    tbody td{ padding: 12px 10px; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--dark); vertical-align: middle; white-space: nowrap; } 
+    tbody tr:last-child td{ border-bottom: 0; } 
+    tbody tr:hover{ background: var(--table-hover); } 
+    .money{ font-weight: 800; color: var(--dark); } 
 
-    .badge{ display:inline-flex; align-items:center; gap:3px; padding:3px 6px; border-radius:999px; font-size:8px; font-weight:800; } 
-    .badge-occupied{ background:var(--success-light); color:#166534; } 
-    .badge-vacant{ background:var(--danger-light); color:#991b1b; } 
-    .badge-paid{ background:var(--success-light); color:#166534; }
-    .badge-partial{ background:var(--warning-light); color:#92400e; }
-    .badge-unpaid{ background:var(--danger-light); color:#991b1b; }
+    .badge{ display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 10px; font-weight: 800; } 
+    .badge-occupied{ background: var(--success-light); color: #166534; } 
+    .badge-vacant{ background: var(--danger-light); color: #991b1b; } 
 
-    .empty{ padding:30px 15px; text-align:center; } 
-    .empty-icon{ width:40px; height:40px; border-radius:10px; background:#f1f5f9; display:grid; place-items:center; margin:0 auto 6px; font-size:16px; } 
+    .empty{ padding: 48px 20px; text-align: center; } 
+    .empty-icon{ width: 50px; height: 50px; border-radius: 12px; background: var(--input-bg); display: grid; place-items: center; margin: 0 auto 10px; font-size: 20px; color: var(--muted); } 
 
-    /* House Deep Dive Cards Grid (Alternative Detailed View) */
-    .house-deep-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 10px; margin-top: 10px; }
-    .house-detail-card { background: #fafafa; border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
-    .house-detail-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 6px; margin-bottom: 8px; }
-    .house-detail-body { font-size: 10px; display: grid; gap: 4px; color: #334155; }
-    .house-detail-row { display: flex; justify-content: space-between; }
+    /* House Deep Dive Cards Grid */
+    .house-deep-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; margin-top: 4px; }
+    .house-detail-card { background: var(--card-header-bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; transition: transform .15s ease, box-shadow .15s ease; }
+    .house-detail-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); background: var(--white); }
+    .house-detail-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 12px; }
+    .house-detail-body { font-size: 12px; display: grid; gap: 8px; color: var(--muted); }
+    .house-detail-row { display: flex; justify-content: space-between; color: var(--dark); }
 
     /* Toast */ 
     .toast{ 
-      position:fixed; right:12px; bottom:12px; z-index:3000; background:#0f172a; color:white; 
-      padding:9px 12px; border-radius:8px; box-shadow:0 10px 25px rgba(0,0,0,.2); font-size:10px; font-weight:750; 
-      opacity:0; transform:translateY(10px); pointer-events:none; transition:.2s; max-width:280px; 
+      position: fixed; right: 20px; bottom: 20px; z-index: 3000; background: var(--dark); color: var(--white); 
+      padding: 12px 18px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); font-size: 12px; font-weight: 700; 
+      opacity: 0; transform: translateY(10px); pointer-events: none; transition: .2s; max-width: 320px; 
     } 
-    .toast.show{ opacity:1; transform:none; } 
+    .toast.show{ opacity: 1; transform: none; } 
   </style>
+  <script>
+    // Instantly apply the theme stored from dashboard.html before page renders to prevent flashing
+    (function() {
+      const savedTheme = localStorage.getItem("theme") || localStorage.getItem("ag_theme") || "light";
+      document.documentElement.setAttribute("data-theme", savedTheme);
+    })();
+  </script>
 </head>
 <body>
   <div class="app">
@@ -222,7 +266,7 @@
       <div class="stat"> 
         <div class="stat-top"> 
           <div class="stat-label"> Total Units </div> 
-          <div class="stat-icon" style="background:#e0f2fe; color:var(--primary);"> 🏢 </div> 
+          <div class="stat-icon" style="background:var(--primary-light); color:var(--primary);"> 🏢 </div> 
         </div> 
         <div class="stat-value" id="statTotalUnits"> 0 </div> 
         <div class="stat-note"> Registered properties </div> 
@@ -231,7 +275,7 @@
       <div class="stat"> 
         <div class="stat-top"> 
           <div class="stat-label"> Occupancy Rate </div> 
-          <div class="stat-icon" style="background:#dcfce7; color:var(--success);"> ✅ </div> 
+          <div class="stat-icon" style="background:var(--success-light); color:var(--success);"> ✅ </div> 
         </div> 
         <div class="stat-value" id="statOccupancyRate"> 0% </div> 
         <div class="stat-note" id="statOccupancyNote"> 0 of 0 occupied </div> 
@@ -240,7 +284,7 @@
       <div class="stat"> 
         <div class="stat-top"> 
           <div class="stat-label"> Expected Monthly </div> 
-          <div class="stat-icon" style="background:#fef3c7; color:var(--warning);"> 💰 </div> 
+          <div class="stat-icon" style="background:var(--warning-light); color:var(--warning);"> 💰 </div> 
         </div> 
         <div class="stat-value" id="statExpectedRent"> KES 0 </div> 
         <div class="stat-note"> Total potential rent </div> 
@@ -249,7 +293,7 @@
       <div class="stat"> 
         <div class="stat-top"> 
           <div class="stat-label"> Total Collected </div> 
-          <div class="stat-icon" style="background:#dcfce7; color:var(--success);"> 📈 </div> 
+          <div class="stat-icon" style="background:var(--success-light); color:var(--success);"> 📈 </div> 
         </div> 
         <div class="stat-value" id="statTotalCollected"> KES 0 </div> 
         <div class="stat-note"> Cumulative lifetime paid </div> 
@@ -258,7 +302,7 @@
       <div class="stat"> 
         <div class="stat-top"> 
           <div class="stat-label"> Total Deposits </div> 
-          <div class="stat-icon" style="background:#f1f5f9; color:var(--dark);"> 🛡️ </div> 
+          <div class="stat-icon" style="background:var(--border); color:var(--dark);"> 🛡️ </div> 
         </div> 
         <div class="stat-value" id="statTotalDeposits"> KES 0 </div> 
         <div class="stat-note"> Held security bonds </div> 
@@ -276,9 +320,7 @@
           </div>
         </div>
         <div class="card-body">
-          <div class="bar-chart-container" id="occupancyGraphBars">
-            <!-- Dynamically populated -->
-          </div>
+          <div class="bar-chart-container" id="occupancyGraphBars"></div>
         </div>
       </div>
 
@@ -291,14 +333,12 @@
           </div>
         </div>
         <div class="card-body">
-          <div class="bar-chart-container" id="paymentChannelBars">
-            <!-- Dynamically populated -->
-          </div>
+          <div class="bar-chart-container" id="paymentChannelBars"></div>
         </div>
       </div>
     </div>
 
-    <div style="height: 10px;"></div>
+    <div style="height: 16px;"></div>
 
     <!-- ===================================================== MASTER SPREADSHEET TABLE ====================================================== -->
     <div class="card">
@@ -365,18 +405,90 @@
     const DB_KEY = "ag_rental_database";
     let database = { houses: [] };
 
+    // Default Seed Data if LocalStorage is empty
+    const DEFAULT_SEED = {
+      houses: [
+        {
+          id: "h1",
+          houseNumber: "A1",
+          type: "1 Bedroom",
+          monthlyRent: 25000,
+          tenants: [
+            {
+              status: "active",
+              name: "David Maina",
+              phone: "+254 712 345 678",
+              leaseStart: "2025-01-15",
+              deposit: 25000,
+              payments: [
+                { amount: 25000, method: "M-Pesa", date: "2026-02-01" },
+                { amount: 25000, method: "M-Pesa", date: "2026-03-01" }
+              ]
+            }
+          ]
+        },
+        {
+          id: "h2",
+          houseNumber: "A2",
+          type: "2 Bedroom",
+          monthlyRent: 38000,
+          tenants: [
+            {
+              status: "active",
+              name: "Amina Chebet",
+              phone: "+254 733 987 654",
+              leaseStart: "2024-11-01",
+              deposit: 38000,
+              payments: [
+                { amount: 38000, method: "Bank Transfer", date: "2026-02-03" },
+                { amount: 38000, method: "Bank Transfer", date: "2026-03-02" }
+              ]
+            }
+          ]
+        },
+        {
+          id: "h3",
+          houseNumber: "B1",
+          type: "Studio",
+          monthlyRent: 18000,
+          tenants: []
+        },
+        {
+          id: "h4",
+          houseNumber: "B2",
+          type: "1 Bedroom",
+          monthlyRent: 26000,
+          tenants: [
+            {
+              status: "active",
+              name: "Brian Ochieng",
+              phone: "+254 722 111 222",
+              leaseStart: "2025-06-10",
+              deposit: 26000,
+              payments: [
+                { amount: 26000, method: "M-Pesa", date: "2026-03-01" }
+              ]
+            }
+          ]
+        }
+      ]
+    };
+
     function loadDatabase() {
       try {
         const raw = localStorage.getItem(DB_KEY);
         if (raw) {
           const parsed = JSON.parse(raw);
-          if (parsed && Array.isArray(parsed.houses)) {
+          if (parsed && Array.isArray(parsed.houses) && parsed.houses.length > 0) {
             database = parsed;
+            return;
           }
         }
+        database = DEFAULT_SEED;
+        localStorage.setItem(DB_KEY, JSON.stringify(database));
       } catch (e) {
         console.error("Error loading database:", e);
-        database = { houses: [] };
+        database = DEFAULT_SEED;
       }
     }
 
@@ -385,7 +497,7 @@
     }
 
     function formatDate(value) {
-      if (!value) return "—";
+      if (!value || value === "—") return "—";
       const date = new Date(value + (String(value).length === 10 ? "T00:00:00" : ""));
       if (Number.isNaN(date.getTime())) return value;
       return date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
@@ -479,7 +591,6 @@
       const vacantCount = totalUnits - occupiedCount;
       const occupancyRate = totalUnits > 0 ? Math.round((occupiedCount / totalUnits) * 100) : 0;
 
-      // Update Top Cards
       document.getElementById("statTotalUnits").textContent = totalUnits;
       document.getElementById("statOccupancyRate").textContent = `${occupancyRate}%`;
       document.getElementById("statOccupancyNote").textContent = `${occupiedCount} occupied, ${vacantCount} vacant`;
@@ -487,7 +598,6 @@
       document.getElementById("statTotalCollected").textContent = `KES ${money(grandTotalCollected)}`;
       document.getElementById("statTotalDeposits").textContent = `KES ${money(grandTotalDeposits)}`;
 
-      // Render Occupancy Graph Bars
       const occGraph = document.getElementById("occupancyGraphBars");
       const occMax = Math.max(totalUnits, 1);
       occGraph.innerHTML = `
@@ -503,7 +613,6 @@
         </div>
       `;
 
-      // Render Payment Channel Graph Bars
       const chanGraph = document.getElementById("paymentChannelBars");
       const maxChanVal = Math.max(...Object.values(channelTotals), 1);
       chanGraph.innerHTML = Object.entries(channelTotals).map(([chan, val]) => `
@@ -547,7 +656,6 @@
         return;
       }
 
-      // Render Spreadsheet Rows
       tableBody.innerHTML = filtered.map(r => {
         const badgeClass = r.isOccupied ? "badge-occupied" : "badge-vacant";
         const badgeText = r.isOccupied ? "Occupied" : "Vacant";
@@ -568,7 +676,6 @@
         `;
       }).join("");
 
-      // Render Detailed Dossier Cards
       dossierContainer.innerHTML = filtered.map(r => {
         const badgeClass = r.isOccupied ? "badge-occupied" : "badge-vacant";
         const badgeText = r.isOccupied ? "Occupied" : "Vacant";
@@ -576,7 +683,7 @@
         return `
           <div class="house-detail-card">
             <div class="house-detail-header">
-              <span style="font-weight:900; font-size:12px;">🏠 House ${esc(r.houseNumber)} (${esc(r.houseType)})</span>
+              <span style="font-weight:800; font-size:13px;">🏠 House ${esc(r.houseNumber)} (${esc(r.houseType)})</span>
               <span class="badge ${badgeClass}">${badgeText}</span>
             </div>
             <div class="house-detail-body">
